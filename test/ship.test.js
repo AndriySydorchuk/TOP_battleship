@@ -55,6 +55,19 @@ describe("testing ship behaviour", () => {
       const s = new Ship(2);
       expect(s.hits).toBe(0);
     });
+
+    test("returns 1 for once hitted ship", () => {
+      const s = new Ship(2);
+      s.hit();
+      expect(s.hits).toBe(1);
+    });
+
+    test("returns 1 for twice hitted ship", () => {
+      const s = new Ship(2);
+      s.hit();
+      s.hit();
+      expect(s.hits).toBe(2);
+    });
   });
 
   describe("hit method", () => {
