@@ -1,0 +1,30 @@
+{
+  "name": "top_battleship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndriySydorchuk/TOP_battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndriySydorchuk/TOP_battleship/issues"
+  },
+  "homepage": "https://github.com/AndriySydorchuk/TOP_battleship#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^8.0.2",
+    "css-loader": "^7.1.4",
+    "html-webpack-plugin": "^5.6.7",
+    "jest": "^30.4.2",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.108.3",
+    "webpack-cli": "^7.1.0",
+    "webpack-dev-server": "^5.2.5"
+  }
+}
