@@ -21,6 +21,11 @@ describe("testing ship behaviour", () => {
     test("throws range error for 5 length input", () => {
       expect(() => new Ship(5)).toThrow(RangeError);
     });
+
+    test("inits hits to 0 by default", () => {
+      const s = new Ship(2);
+      expect(s.hits).toBe(0);
+    });
   });
 
   describe("length getter", () => {
@@ -42,6 +47,13 @@ describe("testing ship behaviour", () => {
     test("returns 4 for length", () => {
       const ship = new Ship(4);
       expect(ship.length).toBe(4);
+    });
+  });
+
+  describe("hits getter", () => {
+    test("returns 0 for new ship instance", () => {
+      const s = new Ship(2);
+      expect(s.hits).toBe(0);
     });
   });
 });
