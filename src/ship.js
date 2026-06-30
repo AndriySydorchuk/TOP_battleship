@@ -1,5 +1,6 @@
 export class Ship {
   #length;
+  #hits;
 
   constructor(length) {
     if (!Number.isInteger(length))
@@ -9,9 +10,14 @@ export class Ship {
       throw new RangeError("length must be between 1 and 4");
 
     this.#length = length;
+    this.#hits = 0;
   }
 
   get length() {
     return this.#length;
+  }
+
+  get hits() {
+    return this.#hits;
   }
 }
