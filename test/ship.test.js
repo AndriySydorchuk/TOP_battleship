@@ -1,6 +1,28 @@
 import { Ship } from "../src/ship";
 
 describe("testing ship behaviour", () => {
+  describe("constructor", () => {
+    test("throws type error for string length input", () => {
+      expect(() => new Ship("hello")).toThrow(TypeError);
+    });
+
+    test("throws type error for float number length input", () => {
+      expect(() => new Ship(3.5)).toThrow(TypeError);
+    });
+
+    test("throws range error for 0 length input", () => {
+      expect(() => new Ship(0)).toThrow(RangeError);
+    });
+
+    test("throws range error for negative length input", () => {
+      expect(() => new Ship(-3)).toThrow(RangeError);
+    });
+
+    test("throws range error for 5 length input", () => {
+      expect(() => new Ship(5)).toThrow(RangeError);
+    });
+  });
+
   describe("length getter", () => {
     test("returns 1 for length", () => {
       const ship = new Ship(1);
