@@ -56,4 +56,30 @@ describe("testing ship behaviour", () => {
       expect(s.hits).toBe(0);
     });
   });
+
+  describe("hit method", () => {
+    test("increases hits from 0 to 1", () => {
+      const s = new Ship(2);
+      expect(s.hits).toBe(0);
+      s.hit();
+      expect(s.hits).toBe(1);
+    });
+
+    test("increases hits from 1 to 2", () => {
+      const s = new Ship(2);
+      expect(s.hits).toBe(0);
+      s.hit();
+      s.hit();
+      expect(s.hits).toBe(2);
+    });
+
+    test("increases hits by 1", () => {
+      const s = new Ship(3);
+      expect(s.hits).toBe(0);
+      s.hit();
+      expect(s.hits).toBe(1);
+      s.hit();
+      expect(s.hits).toBe(2);
+    });
+  });
 });
