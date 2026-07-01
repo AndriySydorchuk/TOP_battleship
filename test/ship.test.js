@@ -95,4 +95,24 @@ describe("testing ship behaviour", () => {
       expect(s.hits).toBe(2);
     });
   });
+
+  describe("isSunk method", () => {
+    test("returns false for newly created ship", () => {
+      const s = new Ship(2);
+      expect(s.isSunk()).toBe(false);
+    });
+
+    test("returns false for 2 length ship with 1 hit", () => {
+      const s = new Ship(2);
+      s.hit();
+      expect(s.isSunk()).toBe(false);
+    });
+
+    test("returns true for 2 length ship with 2 hits", () => {
+      const s = new Ship(2);
+      s.hit();
+      s.hit();
+      expect(s.isSunk()).toBe(true);
+    });
+  });
 });
