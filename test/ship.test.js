@@ -94,6 +94,13 @@ describe("testing ship behaviour", () => {
       s.hit();
       expect(s.hits).toBe(2);
     });
+
+    test("does not increment hits above ships length", () => {
+      const s = new Ship(1);
+      s.hit();
+      s.hit();
+      expect(s.hits).toBe(1);
+    });
   });
 
   describe("isSunk method", () => {
