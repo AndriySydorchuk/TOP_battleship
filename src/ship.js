@@ -24,10 +24,16 @@ export class Ship {
   }
 
   hit() {
-    if (this.#hits !== this.#length) this.#hits++;
+    if (this.#hits + 1 <= this.#length) {
+      this.#hits++;
+    }
+
+    if (this.#hits === this.#length) {
+      this.#sunk = true;
+    }
   }
 
   isSunk() {
-    return this.#hits === this.#length;
+    return this.#sunk;
   }
 }
