@@ -1,6 +1,7 @@
 export class Ship {
   #length;
   #hits;
+  #sunk;
 
   constructor(length) {
     if (!Number.isInteger(length))
@@ -11,6 +12,7 @@ export class Ship {
 
     this.#length = length;
     this.#hits = 0;
+    this.#sunk = false;
   }
 
   get length() {
@@ -23,5 +25,9 @@ export class Ship {
 
   hit() {
     this.#hits++;
+  }
+
+  isSunk() {
+    return this.#hits === this.#length;
   }
 }
