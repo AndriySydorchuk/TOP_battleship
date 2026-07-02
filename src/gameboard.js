@@ -127,4 +127,17 @@ export class Gameboard {
     if (this.#board[row][col] instanceof Ship) return;
     this.#board[row][col] = value;
   }
+
+  receiveAttack(coordinates) {
+    this.#checkCoordinatesValidity(coordinates, { checkAttacked: true });
+
+    const cell = this.#board[coordinates[0]][coordinates[1]];
+
+    if (cell instanceof Ship) {
+      cell.hit();
+      this.#hitted.push(coordinates);
+    } else {
+      this.#missed.push(coordinates);
+    }
+  }
 }
