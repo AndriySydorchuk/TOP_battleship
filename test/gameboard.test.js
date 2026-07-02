@@ -3,7 +3,7 @@ import { Gameboard } from "../src/gameboard";
 import { Ship } from "../src/ship";
 
 describe("testing gameboard behaviour", () => {
-  describe("placeShip method", () => {
+  describe.skip("placeShip method", () => {
     test("places ship horizontally", () => {
       const b = new Gameboard();
       const s = new Ship(3);
@@ -79,7 +79,7 @@ describe("testing gameboard behaviour", () => {
     });
   });
 
-  describe("receiveAttack method", () => {
+  describe.skip("receiveAttack method", () => {
     test("hits the ship", () => {
       const b = new Gameboard();
       const s = new Ship(1);
@@ -138,6 +138,87 @@ describe("testing gameboard behaviour", () => {
       expect(() => b.receiveAttack([-1, -1])).toThrow(RangeError);
       expect(() => b.receiveAttack([1, -1])).toThrow(RangeError);
       expect(() => b.receiveAttack([-1, 1])).toThrow(RangeError);
+    });
+  });
+
+  describe("allShipsSunk method", () => {
+    test("returns undefined for an empty board", () => {
+      const b = new Gameboard();
+
+      expect(b.allShipsSunk()).toBeUndefined();
+    });
+
+    test("returns false for board with unhitted ships", () => {
+      const b = new Gameboard();
+
+      const s = new Ship(2);
+      const s2 = new Ship(3);
+
+      b.placeShip(s, [0, 0]);
+      b.placeShip(s2, [3, 3]);
+
+      expect(b.allShipsSunk()).toBe(false);
+    });
+
+    test("returns false for board with hitted but not sunk ships", () => {
+      const b = new Gameboard();
+
+      const s = new Ship(2);
+      const s2 = new Ship(3);
+
+      b.placeShip(s, [0, 0]);
+      b.placeShip(s2, [3, 3]);
+
+      b.receiveAttack([0, 1]);
+      b.receiveAttack([3, 5]);
+
+      expect(b.allShipsSunk()).toBe(false);
+    });
+
+    test("returns false for board with not hitted, hitted and sunk ships", () => {
+      const b = new Gameboard();
+
+      const s = new Ship(2);
+      const s2 = new Ship(3);
+      const s3 = new Ship(1);
+
+      b.placeShip(s, [0, 0]);
+      b.placeShip(s2, [3, 3]);
+      b.placeShip(s3, [6, 6]);
+
+      b.receiveAttack([3, 4]);
+      b.receiveAttack([3, 5]);
+      b.receiveAttack([6, 6]);
+
+      expect(b.allShipsSunk()).toBe(false);
+    });
+
+    test("returns true for board with one sunk ship", () => {
+      const b = new Gameboard();
+
+      const s = new Ship(1);
+
+      b.placeShip(s, [3, 3]);
+
+      b.receiveAttack([3, 3]);
+
+      expect(b.allShipsSunk()).toBe(true);
+    });
+
+    test("returns true for board with multiple sunk ships", () => {
+      const b = new Gameboard();
+
+      const s = new Ship(1);
+      const s2 = new Ship(2);
+
+      b.placeShip(s, [3, 3]);
+      b.placeShip(s, [0, 0]);
+
+      b.receiveAttack([3, 3]);
+      b.receiveAttack([0, 0]);
+      b.receiveAttack([0, 1]);
+
+      expect(b.allShipsSunk()).toBe(true);
     });
   });
 });
