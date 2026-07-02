@@ -3,7 +3,7 @@ import { Gameboard } from "../src/gameboard";
 import { Ship } from "../src/ship";
 
 describe("testing gameboard behaviour", () => {
-  describe.skip("placeShip method", () => {
+  describe("placeShip method", () => {
     test("places ship horizontally", () => {
       const b = new Gameboard();
       const s = new Ship(3);
@@ -79,7 +79,7 @@ describe("testing gameboard behaviour", () => {
     });
   });
 
-  describe.skip("receiveAttack method", () => {
+  describe("receiveAttack method", () => {
     test("hits the ship", () => {
       const b = new Gameboard();
       const s = new Ship(1);
