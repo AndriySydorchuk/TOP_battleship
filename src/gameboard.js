@@ -139,18 +139,12 @@ export class Gameboard {
 
     this.#board.forEach((line) => {
       line.forEach((cell) => {
-        if (cell instanceof Ship) ships.push(cell);
+        if (cell instanceof Ship && !ships.includes(cell)) ships.push(cell);
       });
-    });
-
-    ships.forEach((ship) => {
-      if (ship.isSunk()) {
-        return true;
-      }
     });
 
     if (ships.length === 0) return;
 
-    return false;
+    return ships.every((ship) => ship.isSunk());
   }
 }
