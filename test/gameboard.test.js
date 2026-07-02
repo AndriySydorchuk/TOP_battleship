@@ -78,4 +78,66 @@ describe("testing gameboard behaviour", () => {
       expect(() => b.placeShip("ship", [0, 0])).toThrow(TypeError);
     });
   });
+
+  describe("receiveAttack method", () => {
+    test("hits the ship", () => {
+      const b = new Gameboard();
+      const s = new Ship(1);
+
+      b.placeShip(s, [0, 0]);
+
+      b.receiveAttack([0, 0]);
+
+      expect(s.hits).toBe(1);
+      expect(s.isSunk()).toBe(true);
+    });
+
+    test("records missed attack", () => {
+      const b = new Gameboard();
+      const s = new Ship(1);
+
+      b.placeShip(s, [0, 0]);
+
+      b.receiveAttack([0, 1]);
+      b.receiveAttack([3, 3]);
+      b.receiveAttack([1, 1]);
+
+      expect(b.missed).toContainEqual([0, 1]);
+      expect(b.missed).toContainEqual([3, 3]);
+      expect(b.missed).toContainEqual([1, 1]);
+      expect(b.missed).not.toContainEqual([0, 0]);
+    });
+
+    test("throws for already hitted coordinates", () => {
+      const b = new Gameboard();
+      const s = new Ship(2);
+
+      b.placeShip(s, [0, 0]);
+      b.receiveAttack([0, 1]);
+
+      expect(() => b.receiveAttack([0, 1])).toThrow(Error);
+      expect(s.hits).toBe(1);
+    });
+
+    test("throws for already missed coordinates", () => {
+      const b = new Gameboard();
+      const s = new Ship(2);
+
+      b.placeShip(s, [0, 0]);
+      b.receiveAttack([1, 1]);
+
+      expect(() => b.receiveAttack([1, 1])).toThrow(Error);
+    });
+
+    test("throws for invalid coordinates", () => {
+      const b = new Gameboard();
+      const s = new Ship(1);
+
+      b.placeShip(s, [0, 0]);
+
+      expect(() => b.receiveAttack([-1, -1])).toThrow(RangeError);
+      expect(() => b.receiveAttack([1, -1])).toThrow(RangeError);
+      expect(() => b.receiveAttack([-1, 1])).toThrow(RangeError);
+    });
+  });
 });
