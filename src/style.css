@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "JetBrains Mono", monospace;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+.header-title {
+  padding-top: 30px;
+  padding-left: 30px;
+}
