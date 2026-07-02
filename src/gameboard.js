@@ -99,20 +99,13 @@ export class Gameboard {
     const dRow = orientation === "h" ? 0 : 1;
     const dCol = orientation === "h" ? 1 : 0;
 
-    for (let i = 0; i < ship.length; i++) {
-      const r = row + dRow * i;
-      const c = col + dCol * i;
+    const endRow = row + dRow * (ship.length - 1);
+    const endCol = col + dCol * (ship.length - 1);
 
-      this.#safeMarkCell(r + dCol, c + dRow, -1);
-      this.#safeMarkCell(r - dCol, c - dRow, -1);
-    }
-
-    for (let i = -1; i < ship.length + 1; i++) {
-      const r = row + dRow * i;
-      const c = col + dCol * i;
-
-      this.#safeMarkCell(r - dRow, c - dCol, -1);
-      this.#safeMarkCell(r + dRow * ship.length, c + dCol * ship.length, -1);
+    for (let r = row - 1; r <= endRow + 1; r++) {
+      for (let c = col - 1; c <= endCol + 1; c++) {
+        this.#safeMarkCell(r, c, -1);
+      }
     }
   }
 
