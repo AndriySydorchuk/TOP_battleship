@@ -1,3 +1,5 @@
+import { Gameboard } from "./gameboard";
+
 export class Player {
   #type;
   #board;
@@ -7,7 +9,7 @@ export class Player {
       throw new TypeError("expected real or computer player type");
 
     this.#type = type;
-    this.#board = board;
+    this.board = board;
   }
 
   get type() {
@@ -19,6 +21,11 @@ export class Player {
   }
 
   set board(newBoard) {
+    if (!(newBoard instanceof Gameboard) && newBoard !== null)
+      throw new TypeError(
+        "expected instance of Gameboard or null as board argument",
+      );
+
     this.#board = newBoard;
   }
 }
