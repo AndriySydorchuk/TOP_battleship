@@ -1,5 +1,5 @@
 import "./style.css";
 
-import { domManager } from "./domManager";
+import { game } from "./game";
 
-domManager.renderStartView();
+game.init();
