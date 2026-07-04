@@ -1,3 +1,5 @@
+import { CONFIG } from "./config";
+
 export class Ship {
   #length;
   #hits;
@@ -7,8 +9,13 @@ export class Ship {
     if (!Number.isInteger(length))
       throw new TypeError("expected an integer for length");
 
-    if (length < 1 || length > 4)
-      throw new RangeError("length must be between 1 and 4");
+    if (
+      length < CONFIG.SHIP_PROPERTIES.MIN_LEN ||
+      length > CONFIG.SHIP_PROPERTIES.MAX_LEN
+    )
+      throw new RangeError(
+        `length must be between ${CONFIG.SHIP_PROPERTIES.MIN_LEN} and ${CONFIG.SHIP_PROPERTIES.MAX_LEN}`,
+      );
 
     this.#length = length;
     this.#hits = 0;

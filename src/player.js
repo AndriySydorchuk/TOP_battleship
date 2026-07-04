@@ -1,3 +1,4 @@
+import { CONFIG } from "./config";
 import { Gameboard } from "./gameboard";
 
 export class Player {
@@ -5,8 +6,13 @@ export class Player {
   #board;
 
   constructor(type, board = null) {
-    if (type !== "real" && type !== "computer")
-      throw new TypeError("expected real or computer player type");
+    if (
+      type !== CONFIG.PLAYER_TYPE.REAL &&
+      type !== CONFIG.PLAYER_TYPE.COMPUTER
+    )
+      throw new TypeError(
+        `expected ${CONFIG.PLAYER_TYPE.REAL} or ${CONFIG.PLAYER_TYPE.COMPUTER} as player type`,
+      );
 
     this.#type = type;
     this.board = board;

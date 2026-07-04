@@ -1,3 +1,4 @@
+import { CONFIG } from "./config";
 import { Ship } from "./ship";
 
 export class Gameboard {
@@ -6,7 +7,9 @@ export class Gameboard {
   #hitted;
 
   constructor() {
-    this.#board = Array.from({ length: 10 }, () => Array(10).fill(0));
+    this.#board = Array.from({ length: CONFIG.BOARD_SIZE }, () =>
+      Array(CONFIG.BOARD_SIZE).fill(CONFIG.CELL.EMPTY),
+    );
 
     this.#missed = [];
     this.#hitted = [];
@@ -20,7 +23,7 @@ export class Gameboard {
     return this.#missed;
   }
 
-  placeShip(ship, coordinates, orientation = "h") {
+  placeShip(ship, coordinates, orientation = CONFIG.ORIENTATION.HORIZONTAL) {
     this.#checkShipValidity(ship);
     this.#checkCoordinatesValidity(coordinates, { checkOccupied: true });
     this.#checkOrientationValidity(orientation.toLowerCase());
@@ -39,16 +42,16 @@ export class Gameboard {
   ) {
     const [row, col] = coordinates;
 
-    if (coordinates.length !== 2)
+    if (coordinates.length !== CONFIG.COORDINATES_LENGTH)
       throw new RangeError(
-        "coordinates must contain exactly two values: [row, col]",
+        `coordinates must contain exactly ${CONFIG.COORDINATES_LENGTH} values`,
       );
 
     if (
       row < 0 ||
-      row >= this.#board.length ||
+      row >= CONFIG.BOARD_SIZE ||
       col < 0 ||
-      col >= this.#board.length
+      col >= CONFIG.BOARD_SIZE
     )
       throw new RangeError("coordinates are out of bounds");
 
@@ -70,9 +73,12 @@ export class Gameboard {
   }
 
   #checkOrientationValidity(orientation) {
-    if (orientation !== "h" && orientation !== "v") {
+    if (
+      orientation !== CONFIG.ORIENTATION.HORIZONTAL &&
+      orientation !== CONFIG.ORIENTATION.VERTICAL
+    ) {
       throw new TypeError(
-        "orientation must be 'h' - for horizontal or 'v' for vertical",
+        `orientation must be '${CONFIG.ORIENTATION.HORIZONTAL}' - for horizontal or '${CONFIG.ORIENTATION.VERTICAL}' for vertical`,
       );
     }
   }
@@ -80,8 +86,8 @@ export class Gameboard {
   #deployShip(ship, coordinates, orientation) {
     const [row, col] = coordinates;
 
-    const dRow = orientation === "h" ? 0 : 1;
-    const dCol = orientation === "h" ? 1 : 0;
+    const dRow = orientation === CONFIG.ORIENTATION.HORIZONTAL ? 0 : 1;
+    const dCol = orientation === CONFIG.ORIENTATION.HORIZONTAL ? 1 : 0;
 
     for (let i = 0; i < ship.length; i++) {
       const r = row + dRow * i;
@@ -96,15 +102,15 @@ export class Gameboard {
   #placeBufferZone(ship, coordinates, orientation) {
     const [row, col] = coordinates;
 
-    const dRow = orientation === "h" ? 0 : 1;
-    const dCol = orientation === "h" ? 1 : 0;
+    const dRow = orientation === CONFIG.ORIENTATION.HORIZONTAL ? 0 : 1;
+    const dCol = orientation === CONFIG.ORIENTATION.HORIZONTAL ? 1 : 0;
 
     const endRow = row + dRow * (ship.length - 1);
     const endCol = col + dCol * (ship.length - 1);
 
     for (let r = row - 1; r <= endRow + 1; r++) {
       for (let c = col - 1; c <= endCol + 1; c++) {
-        this.#safeMarkCell(r, c, -1);
+        this.#safeMarkCell(r, c, CONFIG.CELL.BUFFER);
       }
     }
   }
@@ -112,12 +118,14 @@ export class Gameboard {
   #safeMarkCell(row, col, value) {
     if (
       row < 0 ||
-      row >= this.#board.length ||
+      row >= CONFIG.BOARD_SIZE ||
       col < 0 ||
-      col >= this.#board[0].length
+      col >= CONFIG.BOARD_SIZE
     )
       return;
+
     if (this.#board[row][col] instanceof Ship) return;
+
     this.#board[row][col] = value;
   }
 
