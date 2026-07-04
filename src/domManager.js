@@ -113,17 +113,13 @@ const domManager = (() => {
   }
 
   function showBoardView() {
-    const boardViewEl = document.querySelector(".board-view");
-
     startView.classList.add("hidden");
-    boardViewEl.classList.remove("hidden");
+    boardView.classList.remove("hidden");
   }
 
   function showStartView() {
-    const boardViewEl = document.querySelector(".board-view");
-
     startView.classList.remove("hidden");
-    boardViewEl.classList.add("hidden");
+    boardView.classList.add("hidden");
   }
 
   return { createStartViewContent, showStartView, showBoardView };
