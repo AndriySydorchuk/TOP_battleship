@@ -7,9 +7,9 @@ const eventManager = (() => {
   }
 
   function handleBoardViewSwitch() {
-    const computerBoxEl = document.querySelector(".computer-box");
+    const computerOption = document.querySelector(".computer-option");
 
-    computerBoxEl.addEventListener("click", () => domManager.showBoardView());
+    computerOption.addEventListener("click", () => domManager.showBoardView());
   }
 
   function handleStartViewSwitch() {

@@ -1,30 +1,24 @@
-import computerImage from "../assets/computer.png";
+import computerImg from "../assets/computer.png";
 import arrowleft from "../assets/arrowleft.svg";
 
 import { game } from "./game";
 
 const domManager = (() => {
-  function renderViews() {
-    renderStartView();
-    renderBoardView();
-  }
+  const startView = document.querySelector(".start-view");
 
-  function renderStartView() {
-    const startViewEl = document.querySelector(".start-view");
+  function createStartViewContent() {
+    const computerOption = document.createElement("div");
+    computerOption.classList.add("computer-option");
 
-    const computerBox = document.createElement("div");
-    computerBox.classList.add("computer-box");
+    const computerOptionImg = document.createElement("img");
+    computerOptionImg.src = computerImg;
 
-    const computerBoxImage = document.createElement("img");
-    computerBoxImage.classList.add("computer-box-image");
-    computerBoxImage.src = computerImage;
+    const computerOptionText = document.createElement("p");
+    computerOptionText.textContent = "vs Computer";
 
-    const computerBoxText = document.createElement("p");
-    computerBoxText.textContent = "vs Computer";
+    computerOption.append(computerOptionImg, computerOptionText);
 
-    computerBox.append(computerBoxImage, computerBoxText);
-
-    startViewEl.append(computerBox);
+    startView.append(computerOption);
   }
 
   function renderBoardView() {
@@ -123,22 +117,20 @@ const domManager = (() => {
   }
 
   function showBoardView() {
-    const startViewEl = document.querySelector(".start-view");
     const boardViewEl = document.querySelector(".board-view");
 
-    startViewEl.classList.add("hidden");
+    startView.classList.add("hidden");
     boardViewEl.classList.remove("hidden");
   }
 
   function showStartView() {
-    const startViewEl = document.querySelector(".start-view");
     const boardViewEl = document.querySelector(".board-view");
 
-    startViewEl.classList.remove("hidden");
+    startView.classList.remove("hidden");
     boardViewEl.classList.add("hidden");
   }
 
-  return { renderViews, showStartView, showBoardView };
+  return { createStartViewContent, showStartView, showBoardView };
 })();
 
 export { domManager };

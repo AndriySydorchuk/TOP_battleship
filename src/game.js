@@ -4,7 +4,7 @@ import { Ship } from "./ship";
 
 const game = (() => {
   function init() {
-    domManager.renderViews();
+    domManager.createStartViewContent();
     eventManager.handleViewSwitch();
   }
 
