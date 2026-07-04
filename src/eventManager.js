@@ -13,9 +13,9 @@ const eventManager = (() => {
   }
 
   function handleStartViewSwitch() {
-    const backBtn = document.querySelector(".back-btn");
+    const returnBtn = document.querySelector(".return-btn");
 
-    backBtn.addEventListener("click", () => domManager.showStartView());
+    returnBtn.addEventListener("click", () => domManager.showStartView());
   }
 
   return { handleViewSwitch };

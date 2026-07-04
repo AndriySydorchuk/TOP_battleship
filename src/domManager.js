@@ -5,6 +5,7 @@ import { game } from "./game";
 
 const domManager = (() => {
   const startView = document.querySelector(".start-view");
+  const boardView = document.querySelector(".board-view");
 
   function createStartViewContent() {
     const computerOption = document.createElement("div");
@@ -21,39 +22,34 @@ const domManager = (() => {
     startView.append(computerOption);
   }
 
-  function renderBoardView() {
-    renderGoBackSection();
-
-    const boardViewEl = document.querySelector(".board-view");
+  function createBoardView() {
+    createReturnSection();
 
     const boardContentEl = document.createElement("div");
     boardContentEl.classList.add("board-content");
 
-    boardViewEl.append(boardContentEl);
+    boardView.append(boardContentEl);
 
     renderBoard();
     renderShips();
     renderActions();
   }
 
-  function renderGoBackSection() {
-    const boardViewEl = document.querySelector(".board-view");
+  function createReturnSection() {
+    const returnContainer = document.createElement("div");
+    returnContainer.classList.add("return-container");
 
-    const topEl = document.createElement("div");
-    topEl.classList.add("top");
+    const returnBtn = document.createElement("button");
+    returnBtn.classList.add("return-btn");
 
-    const backBtn = document.createElement("button");
-    backBtn.classList.add("back-btn");
+    const returnBtnImg = document.createElement("img");
+    returnBtnImg.src = arrowleft;
 
-    const backBtnImg = document.createElement("img");
-    backBtnImg.src = arrowleft;
-    backBtnImg.classList.add("back-btn-img");
+    returnBtn.append(returnBtnImg);
 
-    backBtn.append(backBtnImg);
+    returnContainer.append(returnBtn);
 
-    topEl.append(backBtn);
-
-    boardViewEl.append(topEl);
+    boardView.append(returnContainer);
   }
 
   function renderBoard() {
