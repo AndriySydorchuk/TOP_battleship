@@ -1,11 +1,11 @@
 import computerImg from "../assets/computer.png";
 import arrowleft from "../assets/arrowleft.svg";
-
+import { CONFIG } from "./config";
 import { game } from "./game";
 
 const domManager = (() => {
   const startView = document.querySelector(".start-view");
-  const boardView = document.querySelector(".board-view");
+  const setupView = document.querySelector(".setup-view");
 
   function createStartViewContent() {
     const computerOption = document.createElement("div");
@@ -22,17 +22,17 @@ const domManager = (() => {
     startView.append(computerOption);
   }
 
-  function createBoardView() {
+  function createSetupViewContent() {
     createReturnSection();
 
-    const boardContentEl = document.createElement("div");
-    boardContentEl.classList.add("board-content");
+    const setupContainer = document.createElement("div");
+    setupContainer.classList.add("setup-container");
 
-    boardView.append(boardContentEl);
+    setupView.append(setupContainer);
 
-    renderBoard();
-    renderShips();
-    renderActions();
+    createBoard();
+    // renderShips();
+    // renderActions();
   }
 
   function createReturnSection() {
@@ -49,30 +49,36 @@ const domManager = (() => {
 
     returnContainer.append(returnBtn);
 
-    boardView.append(returnContainer);
+    setupView.append(returnContainer);
   }
 
-  function renderBoard() {
-    const boardContentEl = document.querySelector(".board-content");
+  function createBoard(gameboard) {
+    const setupContainer = document.querySelector(".setup-container");
 
-    const boardEl = document.createElement("div");
-    boardEl.classList.add("board");
+    const board = document.createElement("div");
+    board.classList.add("board");
 
-    for (let i = 0; i < 10; i++) {
+    gameboard.forEach((line, i) => {
       const lineEl = document.createElement("div");
       lineEl.classList.add("board-line");
+      lineEl.dataset.row = i;
 
-      for (let j = 0; j < 10; j++) {
+      line.forEach((cell, j) => {
         const cellEl = document.createElement("div");
         cellEl.classList.add("board-cell");
+        cellEl.dataset.col = j;
+
+        if (cell !== CONFIG.CELL.EMPTY && cell !== CONFIG.CELL.BUFFER) {
+          cellEl.classList.add("occupied");
+        }
 
         lineEl.append(cellEl);
-      }
+      });
 
-      boardEl.append(lineEl);
-    }
+      board.append(lineEl);
+    });
 
-    boardContentEl.append(boardEl);
+    setupContainer.append(board);
   }
 
   function renderShips() {
@@ -112,17 +118,22 @@ const domManager = (() => {
     boardContentEl.append(actionsBoxEl);
   }
 
-  function showBoardView() {
+  function showSetupView() {
     startView.classList.add("hidden");
-    boardView.classList.remove("hidden");
+    setupView.classList.remove("hidden");
   }
 
   function showStartView() {
     startView.classList.remove("hidden");
-    boardView.classList.add("hidden");
+    setupView.classList.add("hidden");
   }
 
-  return { createStartViewContent, showStartView, showBoardView };
+  return {
+    createStartViewContent,
+    createSetupViewContent,
+    showStartView,
+    showSetupView,
+  };
 })();
 
 export { domManager };

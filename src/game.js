@@ -5,6 +5,7 @@ import { Ship } from "./ship";
 const game = (() => {
   function init() {
     domManager.createStartViewContent();
+    domManager.createSetupViewContent();
     eventManager.handleViewSwitch();
   }
 

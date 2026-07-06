@@ -3,13 +3,13 @@ import { domManager } from "./domManager";
 const eventManager = (() => {
   function handleViewSwitch() {
     handleStartViewSwitch();
-    handleBoardViewSwitch();
+    handleSetupViewSwitch();
   }
 
-  function handleBoardViewSwitch() {
+  function handleSetupViewSwitch() {
     const computerOption = document.querySelector(".computer-option");
 
-    computerOption.addEventListener("click", () => domManager.showBoardView());
+    computerOption.addEventListener("click", () => domManager.showSetupView());
   }
 
   function handleStartViewSwitch() {
