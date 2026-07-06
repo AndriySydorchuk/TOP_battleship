@@ -25,7 +25,10 @@ export class Gameboard {
 
   placeShip(ship, coordinates, orientation = CONFIG.ORIENTATION.HORIZONTAL) {
     this.#checkShipValidity(ship);
+
+    coordinates = this.#shiftCoordinates(ship, coordinates, orientation);
     this.#checkCoordinatesValidity(coordinates, { checkOccupied: true });
+
     this.#checkOrientationValidity(orientation.toLowerCase());
 
     this.#deployShip(ship, coordinates, orientation.toLowerCase());
@@ -34,6 +37,19 @@ export class Gameboard {
   #checkShipValidity(ship) {
     if (!(ship instanceof Ship))
       throw new TypeError("expected instance of Ship as ship argument");
+  }
+
+  #shiftCoordinates(ship, coordinates, orientation) {
+    if (
+      orientation === CONFIG.ORIENTATION.HORIZONTAL &&
+      coordinates[1] + ship.length > CONFIG.BOARD_SIZE
+    ) {
+      coordinates[1] = coordinates[1] - ship.length + 1;
+    } else if (coordinates[0] + ship.length > CONFIG.BOARD_SIZE) {
+      coordinates[0] = coordinates[0] - ship.length + 1;
+    }
+
+    return coordinates;
   }
 
   #checkCoordinatesValidity(
