@@ -179,6 +179,16 @@ main {
   width: 45px;
 }
 
+.ship.missing {
+  background-color: #b9b9b9;
+  outline-style: dashed;
+  cursor: default;
+}
+
+.ship.missing:hover {
+  box-shadow: none;
+}
+
 .actions-box {
   display: flex;
   justify-content: space-between;

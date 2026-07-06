@@ -81,7 +81,7 @@ const domManager = (() => {
     setupContainer.append(board);
   }
 
-  function createShipPoolSection() {
+  function createShipPoolSection(gameboard) {
     const setupContainer = document.querySelector(".setup-container");
 
     const shipPool = document.createElement("div");
@@ -90,6 +90,15 @@ const domManager = (() => {
     CONFIG.PREDEFINED_SHIP_POOL.forEach((entry) => {
       const ship = document.createElement("div");
       ship.classList.add("ship", `ship-${entry.shipLen}`);
+
+      const [row, col] = entry.coordinates;
+      const correspondingCell = document
+        .querySelectorAll(".board-line")
+        [row].querySelectorAll(".board-cell")[col];
+
+      if (correspondingCell.classList.contains("occupied")) {
+        ship.classList.add("missing");
+      }
 
       shipPool.append(ship);
     });
