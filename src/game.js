@@ -8,7 +8,7 @@ import { Gameboard } from "./gameboard";
 const game = (() => {
   let player1;
   let player2;
-  const placements = [
+  const shipPool = [
     { ship: new Ship(4), coordinates: [1, 1], orientation: "v" },
     { ship: new Ship(3), coordinates: [2, 4], orientation: "h" },
     { ship: new Ship(3), coordinates: [7, 8], orientation: "v" },
@@ -32,19 +32,23 @@ const game = (() => {
 
   function initPlayers() {
     player1 = new Player(CONFIG.PLAYER_TYPE.REAL, new Gameboard());
-    initGameboard(player1, placements);
+    initGameboard(player1, shipPool);
 
     player2 = new Player(CONFIG.PLAYER_TYPE.COMPUTER, new Gameboard());
-    initGameboard(player2, placements);
+    initGameboard(player2, shipPool);
   }
 
-  function initGameboard(player, placements) {
-    placements.forEach(({ ship, coordinates, orientation }) => {
+  function initGameboard(player, shipPool) {
+    shipPool.forEach(({ ship, coordinates, orientation }) => {
       player.board.placeShip(ship, coordinates, orientation);
     });
   }
 
-  return { init };
+  function getShipPool() {
+    return shipPool;
+  }
+
+  return { init, getShipPool };
 })();
 
 export { game };
