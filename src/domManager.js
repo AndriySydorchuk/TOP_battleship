@@ -22,7 +22,7 @@ const domManager = (() => {
     startView.append(computerOption);
   }
 
-  function createSetupViewContent() {
+  function createSetupViewContent(gameboard) {
     createReturnSection();
 
     const setupContainer = document.createElement("div");
@@ -30,7 +30,7 @@ const domManager = (() => {
 
     setupView.append(setupContainer);
 
-    createBoard();
+    createBoard(gameboard);
     // renderShips();
     // renderActions();
   }
@@ -58,7 +58,7 @@ const domManager = (() => {
     const board = document.createElement("div");
     board.classList.add("board");
 
-    gameboard.forEach((line, i) => {
+    gameboard.board.forEach((line, i) => {
       const lineEl = document.createElement("div");
       lineEl.classList.add("board-line");
       lineEl.dataset.row = i;
