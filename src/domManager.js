@@ -31,7 +31,7 @@ const domManager = (() => {
     setupView.append(setupContainer);
 
     createBoard(gameboard);
-    // renderShips();
+    createShipPoolSection();
     // renderActions();
   }
 
@@ -81,22 +81,20 @@ const domManager = (() => {
     setupContainer.append(board);
   }
 
-  function renderShips() {
-    const boardContentEl = document.querySelector(".board-content");
+  function createShipPoolSection() {
+    const setupContainer = document.querySelector(".setup-container");
 
-    const shipBoxEl = document.createElement("div");
-    shipBoxEl.classList.add("ship-box");
+    const shipPool = document.createElement("div");
+    shipPool.classList.add("ship-pool");
 
-    const boardCellEl = document.querySelector(".board-cell");
+    CONFIG.PREDEFINED_SHIP_POOL.forEach((entry) => {
+      const ship = document.createElement("div");
+      ship.classList.add("ship", `ship-${entry.shipLen}`);
 
-    game.getShipsPool().forEach((ship) => {
-      const shipEl = document.createElement("div");
-      shipEl.classList.add("ship", `ship-${ship.length}`);
-
-      shipBoxEl.append(shipEl);
+      shipPool.append(ship);
     });
 
-    boardContentEl.append(shipBoxEl);
+    setupContainer.append(shipPool);
   }
 
   function renderActions() {
