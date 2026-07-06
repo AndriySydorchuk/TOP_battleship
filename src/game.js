@@ -14,6 +14,7 @@ const game = (() => {
 
     domManager.createStartViewContent();
     domManager.createSetupViewContent(player1.board);
+    domManager.createPlayViewContent(player1.board, player2.board);
 
     eventManager.handleViewSwitch();
   }
@@ -32,17 +33,7 @@ const game = (() => {
     });
   }
 
-  function generateShipPool() {
-    return CONFIG.PREDEFINED_SHIP_POOL.map(
-      ({ shipLen, coordinates, orientation }) => ({
-        ship: new Ship(shipLen),
-        coordinates,
-        orientation,
-      }),
-    );
-  }
-
-  return { init, generateShipPool };
+  return { init };
 })();
 
 export { game };
