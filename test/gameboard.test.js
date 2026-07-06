@@ -77,6 +77,38 @@ describe("testing gameboard behaviour", () => {
       expect(() => b.placeShip({ ship: true }, [0, 0], "v")).toThrow(TypeError);
       expect(() => b.placeShip("ship", [0, 0])).toThrow(TypeError);
     });
+
+    test("places ship horizontally for edge coordinates", () => {
+      const b = new Gameboard();
+      const s = new Ship(4);
+
+      expect(() => b.placeShip(s, [9, 9])).not.toThrow();
+      expect(b.board[9][9]).toEqual(s);
+      expect(b.board[9][8]).toEqual(s);
+      expect(b.board[9][7]).toEqual(s);
+      expect(b.board[9][6]).toEqual(s);
+    });
+
+    test("places ship vertically for edge coordinates", () => {
+      const b = new Gameboard();
+      const s = new Ship(4);
+
+      expect(() => b.placeShip(s, [9, 9], "v")).not.toThrow();
+      expect(b.board[9][9]).toEqual(s);
+      expect(b.board[8][9]).toEqual(s);
+      expect(b.board[7][9]).toEqual(s);
+      expect(b.board[6][9]).toEqual(s);
+    });
+
+    test("throws for edge coordinates if shifted coordinates were moved to occupied cells", () => {
+      const b = new Gameboard();
+      const s = new Ship(3);
+      const s2 = new Ship(3);
+
+      b.placeShip(s, [4, 9], "v");
+
+      expect(() => b.placeShip(s2, [9, 9], "v")).toThrow(Error);
+    });
   });
 
   describe("receiveAttack method", () => {
