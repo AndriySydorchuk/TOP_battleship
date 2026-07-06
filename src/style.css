@@ -189,7 +189,7 @@ main {
   box-shadow: none;
 }
 
-.actions-box {
+.actions-container {
   display: flex;
   justify-content: space-between;
   height: 100px;

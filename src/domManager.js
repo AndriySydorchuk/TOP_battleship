@@ -30,9 +30,9 @@ const domManager = (() => {
 
     setupView.append(setupContainer);
 
-    createBoard(gameboard);
+    createBoardSection(gameboard);
     createShipPoolSection();
-    // renderActions();
+    createActionsSection();
   }
 
   function createReturnSection() {
@@ -52,7 +52,7 @@ const domManager = (() => {
     setupView.append(returnContainer);
   }
 
-  function createBoard(gameboard) {
+  function createBoardSection(gameboard) {
     const setupContainer = document.querySelector(".setup-container");
 
     const board = document.createElement("div");
@@ -106,11 +106,11 @@ const domManager = (() => {
     setupContainer.append(shipPool);
   }
 
-  function renderActions() {
-    const boardContentEl = document.querySelector(".board-content");
+  function createActionsSection() {
+    const setupContainer = document.querySelector(".setup-container");
 
-    const actionsBoxEl = document.createElement("div");
-    actionsBoxEl.classList.add("actions-box");
+    const actionsContainer = document.createElement("div");
+    actionsContainer.classList.add("actions-container");
 
     const shuffleBtn = document.createElement("button");
     shuffleBtn.classList.add("shuffle-btn");
@@ -120,9 +120,9 @@ const domManager = (() => {
     playBtn.classList.add("play-btn");
     playBtn.textContent = "Play";
 
-    actionsBoxEl.append(shuffleBtn, playBtn);
+    actionsContainer.append(shuffleBtn, playBtn);
 
-    boardContentEl.append(actionsBoxEl);
+    setupContainer.append(actionsContainer);
   }
 
   function showSetupView() {
