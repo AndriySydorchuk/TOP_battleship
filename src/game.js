@@ -48,18 +48,71 @@ const game = (() => {
   }
 
   function attack(coordinates) {
-    const gameboard = currentPlayer.board;
-
-    gameboard.receiveAttack(coordinates);
-
-    const hitted = gameboard.hitted.some(
-      (coord) => JSON.stringify(coord) === JSON.stringify(coordinates),
-    );
-
-    return hitted;
+    currentPlayer.board.receiveAttack(coordinates);
   }
 
-  return { init, generateShipPool, attack };
+  function switchTurn() {
+    switchPlayer();
+
+    try {
+      game.attack(generateCoordinates());
+    } catch (error) {
+      console.warn(error.message);
+    }
+
+    switchPlayer();
+  }
+
+  function switchPlayer() {
+    currentPlayer = currentPlayer === player1 ? player2 : player1;
+  }
+
+  function gameOver() {
+    if (player1.board.allShipsSunk() || player2.board.allShipsSunk())
+      return true;
+
+    return false;
+  }
+
+  function getCurrentPlayer() {
+    return currentPlayer;
+  }
+
+  function generateCoordinates() {
+    let coordinates;
+
+    do {
+      coordinates = [
+        Math.floor(Math.random() * CONFIG.BOARD_SIZE),
+        Math.floor(Math.random() * CONFIG.BOARD_SIZE),
+      ];
+    } while (
+      currentPlayer.board.missed.some(
+        (coords) => JSON.stringify(coords) === JSON.stringify(coordinates),
+      ) ||
+      currentPlayer.board.hitted.some(
+        (coords) => JSON.stringify(coords) === JSON.stringify(coordinates),
+      )
+    );
+
+    return coordinates;
+  }
+
+  function getPlayers() {
+    return {
+      first: player1,
+      second: player2,
+    };
+  }
+
+  return {
+    init,
+    generateShipPool,
+    attack,
+    getCurrentPlayer,
+    switchTurn,
+    getPlayers,
+  };
 })();
 
 export { game };

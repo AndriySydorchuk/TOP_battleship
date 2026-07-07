@@ -206,6 +206,18 @@ const domManager = (() => {
   function updateBoard(gameboard) {
     renderShots(gameboard.missed, { class: "miss", mark: point });
     renderShots(gameboard.hitted, { class: "hit", mark: cross });
+    toggleBoards();
+  }
+
+  function toggleBoards() {
+    const activeBoard = document.querySelector(".board.active");
+    const disabledBoard = document.querySelector(".board.disabled");
+
+    activeBoard.classList.remove("active");
+    disabledBoard.classList.remove("disabled");
+
+    activeBoard.classList.add("disabled");
+    disabledBoard.classList.add("active");
   }
 
   function renderShots(
@@ -222,7 +234,9 @@ const domManager = (() => {
       const [sRow, sCol] = shot;
 
       const cell = [...cells].find(
-        (cell) => cell.dataset.row === sRow && cell.dataset.col === sCol,
+        (cell) =>
+          Number(cell.dataset.row) === sRow &&
+          Number(cell.dataset.col) === sCol,
       );
 
       if (cell) {

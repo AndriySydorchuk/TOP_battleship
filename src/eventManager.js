@@ -43,15 +43,24 @@ const eventManager = (() => {
 
     cells.forEach((cell) => {
       cell.addEventListener("click", () => {
-        const coordinates = [cell.dataset.row, cell.dataset.col];
+        const coordinates = [
+          Number(cell.dataset.row),
+          Number(cell.dataset.col),
+        ];
 
         try {
           game.attack(coordinates);
         } catch (error) {
           console.warn(error.message);
+          return;
         }
 
-        domManager.updateBoard(game.getCurrentPlayer().board);
+        game.switchTurn();
+
+        const players = game.getPlayers();
+
+        domManager.updateBoard(players.second.board);
+        domManager.updateBoard(players.first.board);
       });
     });
   }
