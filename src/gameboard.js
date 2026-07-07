@@ -23,6 +23,10 @@ export class Gameboard {
     return this.#missed;
   }
 
+  get hitted() {
+    return this.#hitted;
+  }
+
   placeShip(ship, coordinates, orientation = CONFIG.ORIENTATION.HORIZONTAL) {
     this.#checkShipValidity(ship);
 

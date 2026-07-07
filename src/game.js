@@ -8,15 +8,17 @@ import { Gameboard } from "./gameboard";
 const game = (() => {
   let player1;
   let player2;
+  let currentPlayer;
 
   function init() {
     initPlayers();
 
     domManager.createStartViewContent();
     domManager.createSetupViewContent(player1.board);
-    domManager.createPlayViewContent(player1.board, player2.board);
+    domManager.createPlayViewContent(player1, player2);
 
     eventManager.handleViewSwitch();
+    eventManager.handlePlayBtn(player1, player2);
   }
 
   function initPlayers() {
@@ -25,6 +27,8 @@ const game = (() => {
 
     player2 = new Player(CONFIG.PLAYER_TYPE.COMPUTER, new Gameboard());
     initGameboard(player2, generateShipPool());
+
+    currentPlayer = player2;
   }
 
   function initGameboard(player, shipPool) {
@@ -33,7 +37,29 @@ const game = (() => {
     });
   }
 
-  return { init };
+  function generateShipPool() {
+    return CONFIG.PREDEFINED_SHIP_POOL.map(
+      ({ shipLen, coordinates, orientation }) => ({
+        ship: new Ship(shipLen),
+        coordinates,
+        orientation,
+      }),
+    );
+  }
+
+  function attack(coordinates) {
+    const gameboard = currentPlayer.board;
+
+    gameboard.receiveAttack(coordinates);
+
+    const hitted = gameboard.hitted.some(
+      (coord) => JSON.stringify(coord) === JSON.stringify(coordinates),
+    );
+
+    return hitted;
+  }
+
+  return { init, generateShipPool, attack };
 })();
 
 export { game };

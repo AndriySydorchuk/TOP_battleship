@@ -1,11 +1,14 @@
 import computerImg from "../assets/computer.png";
 import arrowleft from "../assets/arrowleft.svg";
+import cross from "../assets/cross.svg";
+import point from "../assets/point.svg";
 import { CONFIG } from "./config";
-import { game } from "./game";
 
 const domManager = (() => {
   const startView = document.querySelector(".start-view");
   const setupView = document.querySelector(".setup-view");
+  const playView = document.querySelector(".play-view");
+  let setupContainer;
 
   function createStartViewContent() {
     const computerOption = document.createElement("div");
@@ -25,7 +28,7 @@ const domManager = (() => {
   function createSetupViewContent(gameboard) {
     createReturnSection();
 
-    const setupContainer = document.createElement("div");
+    setupContainer = document.createElement("div");
     setupContainer.classList.add("setup-container");
 
     setupView.append(setupContainer);
@@ -53,19 +56,17 @@ const domManager = (() => {
   }
 
   function createBoardSection(gameboard) {
-    const setupContainer = document.querySelector(".setup-container");
-
     const board = document.createElement("div");
     board.classList.add("board");
 
     gameboard.board.forEach((line, i) => {
       const lineEl = document.createElement("div");
       lineEl.classList.add("board-line");
-      lineEl.dataset.row = i;
 
       line.forEach((cell, j) => {
         const cellEl = document.createElement("div");
         cellEl.classList.add("board-cell");
+        cellEl.dataset.row = i;
         cellEl.dataset.col = j;
 
         if (cell !== CONFIG.CELL.EMPTY && cell !== CONFIG.CELL.BUFFER) {
@@ -82,8 +83,6 @@ const domManager = (() => {
   }
 
   function createShipPoolSection(gameboard) {
-    const setupContainer = document.querySelector(".setup-container");
-
     const shipPool = document.createElement("div");
     shipPool.classList.add("ship-pool");
 
@@ -107,8 +106,6 @@ const domManager = (() => {
   }
 
   function createActionsSection() {
-    const setupContainer = document.querySelector(".setup-container");
-
     const actionsContainer = document.createElement("div");
     actionsContainer.classList.add("actions-container");
 
@@ -125,21 +122,118 @@ const domManager = (() => {
     setupContainer.append(actionsContainer);
   }
 
+  function createPlayViewContent(player1, player2) {
+    const playContainer = document.createElement("div");
+    playContainer.classList.add("play-container");
+
+    const player1Board = createBoard(player1);
+    const player2Board = createBoard(player2, { hideShips: true });
+
+    playContainer.append(player1Board, player2Board);
+
+    playView.append(playContainer);
+  }
+
+  function createBoard(player, options = { hideShips: false }) {
+    const board = document.createElement("div");
+    board.classList.add("board");
+    board.id = `${player.type}Board`;
+
+    player.board.board.forEach((line, i) => {
+      const lineEl = document.createElement("div");
+      lineEl.classList.add("board-line");
+
+      line.forEach((cell, j) => {
+        const cellEl = document.createElement("div");
+        cellEl.classList.add("board-cell");
+        cellEl.dataset.row = i;
+        cellEl.dataset.col = j;
+
+        if (
+          cell !== CONFIG.CELL.EMPTY &&
+          cell !== CONFIG.CELL.BUFFER &&
+          !options.hideShips
+        ) {
+          cellEl.classList.add("occupied");
+        }
+
+        lineEl.append(cellEl);
+      });
+
+      board.append(lineEl);
+    });
+
+    return board;
+  }
+
   function showSetupView() {
-    startView.classList.add("hidden");
     setupView.classList.remove("hidden");
+    setupContainer.classList.remove("hidden");
+
+    startView.classList.add("hidden");
+    playView.classList.add("hidden");
   }
 
   function showStartView() {
     startView.classList.remove("hidden");
+
     setupView.classList.add("hidden");
+    setupContainer.classList.add("hidden");
+    playView.classList.add("hidden");
+  }
+
+  function showPlayView() {
+    playView.classList.remove("hidden");
+
+    startView.classList.add("hidden");
+    setupContainer.classList.add("hidden");
+  }
+
+  function disableBoard(player) {
+    const playerBoard = document.getElementById(`${player.type}Board`);
+
+    playerBoard.classList.remove("active");
+    playerBoard.classList.add("disabled");
+  }
+
+  function activateBoard(player) {
+    const playerBoard = document.getElementById(`${player.type}Board`);
+
+    playerBoard.classList.remove("disable");
+    playerBoard.classList.add("active");
+  }
+
+  function markCell(cell, imgSrc) {
+    let cellImg = cell.firstElementChild;
+    if (cellImg) return;
+
+    cellImg = document.createElement("img");
+    cellImg.src = imgSrc;
+
+    cell.append(cellImg);
+    cell.classList.add("shot");
+  }
+
+  function updateCell(cell, hitted) {
+    if (hitted) {
+      markCell(cell, cross);
+      cell.classList.add("hit");
+    } else {
+      markCell(cell, point);
+    }
   }
 
   return {
     createStartViewContent,
     createSetupViewContent,
+    createPlayViewContent,
     showStartView,
     showSetupView,
+    showPlayView,
+    disableBoard,
+    activateBoard,
+    markCell,
+    updateCell,
   };
 })();
 
