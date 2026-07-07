@@ -203,6 +203,35 @@ const domManager = (() => {
     playerBoard.classList.add("active");
   }
 
+  function updateBoard(gameboard) {
+    renderShots(gameboard.missed, { class: "miss", mark: point });
+    renderShots(gameboard.hitted, { class: "hit", mark: cross });
+  }
+
+  function renderShots(
+    shots,
+    state = {
+      class: "",
+      mark: "",
+    },
+  ) {
+    const board = document.querySelector(".board.active");
+    const cells = board.querySelectorAll(".board-cell");
+
+    shots.forEach((shot) => {
+      const [sRow, sCol] = shot;
+
+      const cell = [...cells].find(
+        (cell) => cell.dataset.row === sRow && cell.dataset.col === sCol,
+      );
+
+      if (cell) {
+        cell.classList.add(state.class);
+        markCell(cell, state.mark);
+      }
+    });
+  }
+
   function markCell(cell, imgSrc) {
     let cellImg = cell.firstElementChild;
     if (cellImg) return;
@@ -211,16 +240,6 @@ const domManager = (() => {
     cellImg.src = imgSrc;
 
     cell.append(cellImg);
-    cell.classList.add("shot");
-  }
-
-  function updateCell(cell, hitted) {
-    if (hitted) {
-      markCell(cell, cross);
-      cell.classList.add("hit");
-    } else {
-      markCell(cell, point);
-    }
   }
 
   return {
@@ -232,8 +251,7 @@ const domManager = (() => {
     showPlayView,
     disableBoard,
     activateBoard,
-    markCell,
-    updateCell,
+    updateBoard,
   };
 })();
 

@@ -240,7 +240,7 @@ header {
   outline-offset: -3px;
 }
 
-.board-cell.shot {
+.board-cell.miss {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -248,12 +248,15 @@ header {
   cursor: default;
 }
 
-.board-cell.shot:hover {
+.board-cell.miss:hover {
   outline: none;
 }
 
 .board-cell.hit {
   background-color: lightcoral;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .board-cell.hit img {
