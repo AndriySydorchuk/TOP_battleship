@@ -45,7 +45,12 @@ const eventManager = (() => {
       cell.addEventListener("click", () => {
         const coordinates = [cell.dataset.row, cell.dataset.col];
 
-        game.attack(coordinates);
+        try {
+          game.attack(coordinates);
+        } catch (error) {
+          console.warn(error.message);
+        }
+
         domManager.updateBoard(game.getCurrentPlayer().board);
       });
     });
