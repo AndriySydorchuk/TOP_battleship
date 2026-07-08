@@ -239,20 +239,30 @@ const domManager = (() => {
       );
 
       if (cell) {
-        cell.classList.add(state.class);
-        markCell(cell, state.mark);
+        markCell(cell, {
+          class: state.class,
+          mark: state.mark,
+        });
       }
     });
   }
 
-  function markCell(cell, imgSrc) {
-    let cellImg = cell.firstElementChild;
-    if (cellImg) return;
+  function markCell(
+    cell,
+    state = {
+      class: "",
+      mark: "",
+    },
+  ) {
+    let cellMark = cell.firstElementChild;
+    if (cellMark) return;
 
-    cellImg = document.createElement("img");
-    cellImg.src = imgSrc;
+    cellMark = document.createElement("img");
+    cellMark.src = state.mark;
 
-    cell.append(cellImg);
+    cell.classList.add(state.class);
+
+    cell.append(cellMark);
   }
 
   function displayWinner(winner) {
