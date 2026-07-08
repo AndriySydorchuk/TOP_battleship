@@ -1,4 +1,5 @@
 import { domManager } from "./domManager";
+import { game } from "./game";
 
 const eventManager = (() => {
   function handleViewSwitch() {
@@ -10,6 +11,11 @@ const eventManager = (() => {
     computer.addEventListener("click", () => {
       domManager.resetSetupView();
       domManager.showView(setupView);
+
+      game.initPlayers();
+      const currPlayer = game.getCurrPlayer();
+
+      domManager.updateBoard(currPlayer.board);
     });
 
     const returnBtns = document.querySelectorAll(".return-btn");

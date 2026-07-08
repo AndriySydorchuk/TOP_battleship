@@ -169,6 +169,25 @@ const domManager = (() => {
     });
   }
 
+  function updateBoard(gameboard) {
+    const board = document.querySelector(".board");
+    const cells = board.querySelectorAll(".board-cell");
+
+    cells.forEach((cell) => {
+      const cellRow = Number(cell.dataset.row);
+      const cellCol = Number(cell.dataset.col);
+
+      const gameboardCell = gameboard.board[cellRow][cellCol];
+
+      if (
+        gameboardCell !== CONFIG.CELL.EMPTY &&
+        gameboardCell !== CONFIG.CELL.BUFFER
+      ) {
+        cell.classList.add("ship");
+      }
+    });
+  }
+
   return {
     createStartView,
     createSetupView,
@@ -176,6 +195,7 @@ const domManager = (() => {
     showView,
     resetSetupView,
     resetPlayView,
+    updateBoard,
   };
 })();
 
