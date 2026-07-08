@@ -115,6 +115,18 @@ const domManager = (() => {
     return actions;
   }
 
+  function createPlayView() {
+    const playView = document.createElement("div");
+    playView.classList.add("play-view");
+
+    const returnSection = createReturnSection();
+    const boards = [createBoard(), createBoard()];
+
+    playView.append(returnSection, ...boards);
+
+    return playView;
+  }
+
   function showView(view) {
     const views = document.querySelectorAll("[class*='view']");
 
@@ -141,11 +153,29 @@ const domManager = (() => {
     ships.forEach((ship) => ship.classList.remove("missing"));
   }
 
+  function resetPlayView() {
+    const playView = document.querySelector(".play-view");
+
+    const boards = playView.querySelectorAll(".board");
+
+    boards.forEach((board) => {
+      board.className = "board";
+
+      const cells = playView.querySelectorAll(".board-cell");
+      cells.forEach((cell) => {
+        cell.className = "board-cell";
+        cell.innerHTML = "";
+      });
+    });
+  }
+
   return {
     createStartView,
     createSetupView,
+    createPlayView,
     showView,
     resetSetupView,
+    resetPlayView,
   };
 })();
 
