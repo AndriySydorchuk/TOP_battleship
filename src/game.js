@@ -68,10 +68,12 @@ const game = (() => {
   }
 
   function gameOver() {
-    if (player1.board.allShipsSunk() || player2.board.allShipsSunk())
-      return true;
+    let gameover = false;
 
-    return false;
+    if (player1.board.allShipsSunk() || player2.board.allShipsSunk())
+      gameover = true;
+
+    return gameover;
   }
 
   function getCurrentPlayer() {
@@ -112,6 +114,7 @@ const game = (() => {
     getCurrentPlayer,
     switchTurn,
     getPlayers,
+    gameOver,
   };
 })();
 

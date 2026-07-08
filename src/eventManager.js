@@ -17,7 +17,10 @@ const eventManager = (() => {
   function handleStartViewSwitch() {
     const returnBtn = document.querySelector(".return-btn");
 
-    returnBtn.addEventListener("click", () => domManager.showStartView());
+    returnBtn.addEventListener("click", () => {
+      domManager.showStartView();
+      domManager.resetHeaderTitle();
+    });
   }
 
   function handlePlayViewSwitch() {
@@ -58,6 +61,18 @@ const eventManager = (() => {
         const players = game.getPlayers();
 
         domManager.updateBoard(players.second.board);
+
+        if (game.gameOver()) {
+          const winner =
+            game.getCurrentPlayer() === players.first
+              ? players.second
+              : players.first;
+
+          domManager.disableBoard(game.getCurrentPlayer());
+          domManager.displayWinner(winner);
+          return;
+        }
+
         domManager.toggleBoards();
 
         game.switchTurn();

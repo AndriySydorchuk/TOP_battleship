@@ -255,6 +255,16 @@ const domManager = (() => {
     cell.append(cellImg);
   }
 
+  function displayWinner(winner) {
+    const headerTitle = document.querySelector(".header-title");
+    headerTitle.textContent = `${winner.type} player won!`;
+  }
+
+  function resetHeaderTitle() {
+    const headerTitle = document.querySelector(".header-title");
+    headerTitle.textContent = "Battleship";
+  }
+
   return {
     createStartViewContent,
     createSetupViewContent,
@@ -266,6 +276,8 @@ const domManager = (() => {
     activateBoard,
     updateBoard,
     toggleBoards,
+    displayWinner,
+    resetHeaderTitle,
   };
 })();
 
