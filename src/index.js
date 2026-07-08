@@ -14,3 +14,5 @@ main.append(startView, setupView, playView);
 domManager.showView(startView);
 
 eventManager.handleViewSwitch();
+eventManager.handleSetup();
+eventManager.handlePlay();

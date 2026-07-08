@@ -169,9 +169,8 @@ const domManager = (() => {
     });
   }
 
-  function updateBoard(gameboard) {
-    const board = document.querySelector(".board");
-    const cells = board.querySelectorAll(".board-cell");
+  function updateBoard(boardEl, gameboard) {
+    const cells = boardEl.querySelectorAll(".board-cell");
 
     cells.forEach((cell) => {
       const cellRow = Number(cell.dataset.row);

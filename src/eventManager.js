@@ -11,11 +11,6 @@ const eventManager = (() => {
     computer.addEventListener("click", () => {
       domManager.resetSetupView();
       domManager.showView(setupView);
-
-      game.initPlayers();
-      const currPlayer = game.getCurrPlayer();
-
-      domManager.updateBoard(currPlayer.board);
     });
 
     const returnBtns = document.querySelectorAll(".return-btn");
@@ -30,7 +25,35 @@ const eventManager = (() => {
     });
   }
 
-  return { handleViewSwitch };
+  function handleSetup() {
+    const computer = document.querySelector(".computer");
+
+    computer.addEventListener("click", () => {
+      game.initPlayers();
+
+      const currPlayer = game.getCurrPlayer();
+
+      const setupView = document.querySelector(".setup-view");
+      const board = setupView.querySelector(".board");
+
+      domManager.updateBoard(board, currPlayer.board);
+    });
+  }
+
+  function handlePlay() {
+    const playBtn = document.querySelector(".play-btn");
+
+    playBtn.addEventListener("click", () => {
+      const currPlayer = game.getCurrPlayer();
+
+      const playView = document.querySelector(".play-view");
+      const board = playView.querySelector(".board");
+
+      domManager.updateBoard(board, currPlayer.board);
+    });
+  }
+
+  return { handleViewSwitch, handleSetup, handlePlay };
 })();
 
 export { eventManager };
