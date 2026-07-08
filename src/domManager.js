@@ -1,41 +1,48 @@
 import computerImg from "../assets/computer.png";
-import arrowleft from "../assets/arrowleft.svg";
+import arrowImg from "../assets/arrowleft.svg";
 import cross from "../assets/cross.svg";
 import point from "../assets/point.svg";
 import { CONFIG } from "./config";
 
 const domManager = (() => {
-  const startView = document.querySelector(".start-view");
-  const setupView = document.querySelector(".setup-view");
-  const playView = document.querySelector(".play-view");
-  let setupContainer;
+  function createStartView() {
+    const startView = document.createElement("div");
+    startView.classList.add("start-view");
 
-  function createStartViewContent() {
-    const computerOption = document.createElement("div");
-    computerOption.classList.add("computer-option");
+    const computer = document.createElement("div");
+    computer.classList.add("computer");
 
-    const computerOptionImg = document.createElement("img");
-    computerOptionImg.src = computerImg;
+    const computerIcon = document.createElement("img");
+    computerIcon.src = computerImg;
 
-    const computerOptionText = document.createElement("p");
-    computerOptionText.textContent = "vs Computer";
+    const computerText = document.createElement("p");
+    computerText.textContent = "vs Computer";
 
-    computerOption.append(computerOptionImg, computerOptionText);
+    computer.append(computerIcon, computerText);
 
-    startView.append(computerOption);
+    startView.append(computer);
+
+    return startView;
   }
 
-  function createSetupViewContent(gameboard) {
-    createReturnSection();
+  function createSetupView() {
+    const setupView = document.createElement("div");
+    setupView.classList.add("setup-view");
 
-    setupContainer = document.createElement("div");
+    const returnSection = createReturnSection();
+
+    const setupContainer = document.createElement("div");
     setupContainer.classList.add("setup-container");
 
-    setupView.append(setupContainer);
+    const board = createBoard();
+    const shipPool = createShipPool();
+    const actions = createActions();
 
-    createBoardSection(gameboard);
-    createShipPoolSection();
-    createActionsSection();
+    setupContainer.append(board, shipPool, actions);
+
+    setupView.append(returnSection, setupContainer);
+
+    return setupView;
   }
 
   function createReturnSection() {
@@ -45,69 +52,55 @@ const domManager = (() => {
     const returnBtn = document.createElement("button");
     returnBtn.classList.add("return-btn");
 
-    const returnBtnImg = document.createElement("img");
-    returnBtnImg.src = arrowleft;
+    const returnBtnIcon = document.createElement("img");
+    returnBtnIcon.src = arrowImg;
 
-    returnBtn.append(returnBtnImg);
-
+    returnBtn.append(returnBtnIcon);
     returnContainer.append(returnBtn);
 
-    setupView.append(returnContainer);
+    return returnContainer;
   }
 
-  function createBoardSection(gameboard) {
+  function createBoard() {
     const board = document.createElement("div");
     board.classList.add("board");
 
-    gameboard.board.forEach((line, i) => {
-      const lineEl = document.createElement("div");
-      lineEl.classList.add("board-line");
+    for (let i = 0; i < CONFIG.BOARD_SIZE; i++) {
+      const line = document.createElement("div");
+      line.classList.add("board-line");
 
-      line.forEach((cell, j) => {
-        const cellEl = document.createElement("div");
-        cellEl.classList.add("board-cell");
-        cellEl.dataset.row = i;
-        cellEl.dataset.col = j;
+      for (let j = 0; j < CONFIG.BOARD_SIZE; j++) {
+        const cell = document.createElement("div");
+        cell.classList.add("board-cell");
+        cell.dataset.row = i;
+        cell.dataset.col = j;
 
-        if (cell !== CONFIG.CELL.EMPTY && cell !== CONFIG.CELL.BUFFER) {
-          cellEl.classList.add("occupied");
-        }
+        line.append(cell);
+      }
 
-        lineEl.append(cellEl);
-      });
+      board.append(line);
+    }
 
-      board.append(lineEl);
-    });
-
-    setupContainer.append(board);
+    return board;
   }
 
-  function createShipPoolSection(gameboard) {
+  function createShipPool() {
     const shipPool = document.createElement("div");
     shipPool.classList.add("ship-pool");
 
-    CONFIG.PREDEFINED_SHIP_POOL.forEach((entry) => {
+    CONFIG.SHIP_POOL.forEach((entry) => {
       const ship = document.createElement("div");
       ship.classList.add("ship", `ship-${entry.shipLen}`);
-
-      const [row, col] = entry.coordinates;
-      const correspondingCell = document
-        .querySelectorAll(".board-line")
-        [row].querySelectorAll(".board-cell")[col];
-
-      if (correspondingCell.classList.contains("occupied")) {
-        ship.classList.add("missing");
-      }
 
       shipPool.append(ship);
     });
 
-    setupContainer.append(shipPool);
+    return shipPool;
   }
 
-  function createActionsSection() {
-    const actionsContainer = document.createElement("div");
-    actionsContainer.classList.add("actions-container");
+  function createActions() {
+    const actions = document.createElement("div");
+    actions.classList.add("actions");
 
     const shuffleBtn = document.createElement("button");
     shuffleBtn.classList.add("shuffle-btn");
@@ -117,177 +110,42 @@ const domManager = (() => {
     playBtn.classList.add("play-btn");
     playBtn.textContent = "Play";
 
-    actionsContainer.append(shuffleBtn, playBtn);
+    actions.append(shuffleBtn, playBtn);
 
-    setupContainer.append(actionsContainer);
+    return actions;
   }
 
-  function createPlayViewContent(player1, player2) {
-    const playContainer = document.createElement("div");
-    playContainer.classList.add("play-container");
+  function showView(view) {
+    const views = document.querySelectorAll("[class*='view']");
 
-    const player1Board = createBoard(player1);
-    const player2Board = createBoard(player2, { hideShips: true });
-
-    playContainer.append(player1Board, player2Board);
-
-    playView.append(playContainer);
-  }
-
-  function createBoard(player, options = { hideShips: false }) {
-    const board = document.createElement("div");
-    board.classList.add("board");
-    board.id = `${player.type}Board`;
-
-    player.board.board.forEach((line, i) => {
-      const lineEl = document.createElement("div");
-      lineEl.classList.add("board-line");
-
-      line.forEach((cell, j) => {
-        const cellEl = document.createElement("div");
-        cellEl.classList.add("board-cell");
-        cellEl.dataset.row = i;
-        cellEl.dataset.col = j;
-
-        if (
-          cell !== CONFIG.CELL.EMPTY &&
-          cell !== CONFIG.CELL.BUFFER &&
-          !options.hideShips
-        ) {
-          cellEl.classList.add("occupied");
-        }
-
-        lineEl.append(cellEl);
-      });
-
-      board.append(lineEl);
-    });
-
-    return board;
-  }
-
-  function showSetupView() {
-    setupView.classList.remove("hidden");
-    setupContainer.classList.remove("hidden");
-
-    startView.classList.add("hidden");
-    playView.classList.add("hidden");
-  }
-
-  function showStartView() {
-    startView.classList.remove("hidden");
-
-    setupView.classList.add("hidden");
-    setupContainer.classList.add("hidden");
-    playView.classList.add("hidden");
-  }
-
-  function showPlayView() {
-    playView.classList.remove("hidden");
-
-    startView.classList.add("hidden");
-    setupContainer.classList.add("hidden");
-  }
-
-  function disableBoard(player) {
-    const playerBoard = document.getElementById(`${player.type}Board`);
-
-    playerBoard.classList.remove("active");
-    playerBoard.classList.add("disabled");
-  }
-
-  function activateBoard(player) {
-    const playerBoard = document.getElementById(`${player.type}Board`);
-
-    playerBoard.classList.remove("disable");
-    playerBoard.classList.add("active");
-  }
-
-  function updateBoard(gameboard) {
-    renderShots(gameboard.missed, { class: "miss", mark: point });
-    renderShots(gameboard.hitted, { class: "hit", mark: cross });
-  }
-
-  function toggleBoards() {
-    const activeBoard = document.querySelector(".board.active");
-    const disabledBoard = document.querySelector(".board.disabled");
-
-    activeBoard.classList.remove("active");
-    disabledBoard.classList.remove("disabled");
-
-    activeBoard.classList.add("disabled");
-    disabledBoard.classList.add("active");
-  }
-
-  function renderShots(
-    shots,
-    state = {
-      class: "",
-      mark: "",
-    },
-  ) {
-    const board = document.querySelector(".board.active");
-    const cells = board.querySelectorAll(".board-cell");
-
-    shots.forEach((shot) => {
-      const [sRow, sCol] = shot;
-
-      const cell = [...cells].find(
-        (cell) =>
-          Number(cell.dataset.row) === sRow &&
-          Number(cell.dataset.col) === sCol,
-      );
-
-      if (cell) {
-        markCell(cell, {
-          class: state.class,
-          mark: state.mark,
-        });
+    views.forEach((v) => {
+      if (v === view) {
+        v.classList.remove("hidden");
+      } else {
+        v.classList.add("hidden");
       }
     });
   }
 
-  function markCell(
-    cell,
-    state = {
-      class: "",
-      mark: "",
-    },
-  ) {
-    let cellMark = cell.firstElementChild;
-    if (cellMark) return;
+  function resetSetupView() {
+    const setupView = document.querySelector(".setup-view");
 
-    cellMark = document.createElement("img");
-    cellMark.src = state.mark;
+    const boardCells = setupView.querySelectorAll(".board-cell");
+    boardCells.forEach((cell) => {
+      cell.className = "board-cell";
+      cell.innerHTML = "";
+    });
 
-    cell.classList.add(state.class);
-
-    cell.append(cellMark);
-  }
-
-  function displayWinner(winner) {
-    const headerTitle = document.querySelector(".header-title");
-    headerTitle.textContent = `${winner.type} player won!`;
-  }
-
-  function resetHeaderTitle() {
-    const headerTitle = document.querySelector(".header-title");
-    headerTitle.textContent = "Battleship";
+    const shipPool = setupView.querySelector(".ship-pool");
+    const ships = shipPool.querySelectorAll("div");
+    ships.forEach((ship) => ship.classList.remove("missing"));
   }
 
   return {
-    createStartViewContent,
-    createSetupViewContent,
-    createPlayViewContent,
-    showStartView,
-    showSetupView,
-    showPlayView,
-    disableBoard,
-    activateBoard,
-    updateBoard,
-    toggleBoards,
-    displayWinner,
-    resetHeaderTitle,
+    createStartView,
+    createSetupView,
+    showView,
+    resetSetupView,
   };
 })();
 

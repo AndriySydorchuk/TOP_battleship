@@ -1,5 +1,15 @@
 import "./style.css";
 
-import { game } from "./game";
+import { domManager } from "./domManager";
+import { eventManager } from "./eventManager";
 
-game.init();
+const main = document.querySelector("main");
+
+const startView = domManager.createStartView();
+const setupView = domManager.createSetupView();
+
+main.append(startView, setupView);
+
+domManager.showView(startView);
+
+eventManager.handleViewSwitch();

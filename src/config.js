@@ -18,7 +18,7 @@ const CONFIG = (() => {
     VERTICAL: "v",
   };
 
-  const PREDEFINED_SHIP_POOL = [
+  const SHIP_POOL = [
     { shipLen: 4, coordinates: [1, 1], orientation: "v" },
     { shipLen: 3, coordinates: [2, 4], orientation: "h" },
     { shipLen: 3, coordinates: [7, 8], orientation: "v" },
@@ -42,7 +42,7 @@ const CONFIG = (() => {
     CELL,
     COORDINATES_LENGTH,
     ORIENTATION,
-    PREDEFINED_SHIP_POOL,
+    SHIP_POOL,
     PLAYER_TYPE,
   };
 })();

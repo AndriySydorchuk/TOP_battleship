@@ -1,94 +1,21 @@
 import { domManager } from "./domManager";
-import { game } from "./game";
 
 const eventManager = (() => {
   function handleViewSwitch() {
-    handleStartViewSwitch();
-    handleSetupViewSwitch();
-    handlePlayViewSwitch();
-  }
+    const startView = document.querySelector(".start-view");
+    const setupView = document.querySelector(".setup-view");
 
-  function handleSetupViewSwitch() {
-    const computerOption = document.querySelector(".computer-option");
+    const computer = document.querySelector(".computer");
+    computer.addEventListener("click", () => {
+      domManager.resetSetupView();
+      domManager.showView(setupView);
+    });
 
-    computerOption.addEventListener("click", () => domManager.showSetupView());
-  }
-
-  function handleStartViewSwitch() {
     const returnBtn = document.querySelector(".return-btn");
-
-    returnBtn.addEventListener("click", () => {
-      domManager.showStartView();
-      domManager.resetHeaderTitle();
-    });
+    returnBtn.addEventListener("click", () => domManager.showView(startView));
   }
 
-  function handlePlayViewSwitch() {
-    const playBtn = document.querySelector(".play-btn");
-
-    playBtn.addEventListener("click", () => domManager.showPlayView());
-  }
-
-  function handlePlayBtn(player1, player2) {
-    const playBtn = document.querySelector(".play-btn");
-
-    playBtn.addEventListener("click", () => {
-      domManager.disableBoard(player1);
-      domManager.activateBoard(player2);
-
-      handleCellsClick();
-    });
-  }
-
-  function handleCellsClick() {
-    const board = document.querySelector(".board.active");
-    const cells = board.querySelectorAll(".board-cell");
-
-    cells.forEach((cell) => {
-      cell.addEventListener("click", () => {
-        const coordinates = [
-          Number(cell.dataset.row),
-          Number(cell.dataset.col),
-        ];
-
-        try {
-          game.attack(coordinates);
-        } catch (error) {
-          console.warn(error.message);
-          return;
-        }
-
-        const players = game.getPlayers();
-
-        domManager.updateBoard(players.second.board);
-
-        if (game.gameOver()) {
-          const winner =
-            game.getCurrentPlayer() === players.first
-              ? players.second
-              : players.first;
-
-          domManager.disableBoard(game.getCurrentPlayer());
-          domManager.displayWinner(winner);
-          return;
-        }
-
-        domManager.toggleBoards();
-
-        game.switchTurn();
-
-        setTimeout(() => {
-          domManager.updateBoard(players.first.board);
-        }, 1000);
-
-        setTimeout(() => {
-          domManager.toggleBoards();
-        }, 2000);
-      });
-    });
-  }
-
-  return { handleViewSwitch, handlePlayBtn };
+  return { handleViewSwitch };
 })();
 
 export { eventManager };
