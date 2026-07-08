@@ -55,12 +55,20 @@ const eventManager = (() => {
           return;
         }
 
-        game.switchTurn();
-
         const players = game.getPlayers();
 
         domManager.updateBoard(players.second.board);
-        domManager.updateBoard(players.first.board);
+        domManager.toggleBoards();
+
+        game.switchTurn();
+
+        setTimeout(() => {
+          domManager.updateBoard(players.first.board);
+        }, 1000);
+
+        setTimeout(() => {
+          domManager.toggleBoards();
+        }, 2000);
       });
     });
   }

@@ -206,7 +206,6 @@ const domManager = (() => {
   function updateBoard(gameboard) {
     renderShots(gameboard.missed, { class: "miss", mark: point });
     renderShots(gameboard.hitted, { class: "hit", mark: cross });
-    toggleBoards();
   }
 
   function toggleBoards() {
@@ -266,6 +265,7 @@ const domManager = (() => {
     disableBoard,
     activateBoard,
     updateBoard,
+    toggleBoards,
   };
 })();
 
