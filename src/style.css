@@ -132,7 +132,8 @@ header {
 .board-cell {
   width: 100%;
   height: 100%;
-  outline: 1px dashed #000;
+  outline: 1px dashed #00000046;
+  outline-offset: -1px;
 }
 
 .ship-pool {
@@ -146,14 +147,9 @@ header {
 
 .ship {
   height: 45px;
-  outline: 2px solid #000;
   background-color: #0096ff;
   cursor: grab;
   transition: all 0.3s ease-in-out;
-}
-
-.ship:hover {
-  box-shadow: 0px 0px 39px 3px rgba(0, 0, 0, 0.35);
 }
 
 .ship-4 {
@@ -217,11 +213,18 @@ header {
 }
 
 .board-cell.miss {
-  background-color: yellow;
+  background-color: #bfdbfe;
+  box-shadow: inset 0 0 8px rgba(59, 130, 246, 0.4);
 }
 
 .board-cell.hit {
-  background-color: red;
+  background-color: #fca5a5;
+  box-shadow: inset 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+.board-cell.sunk {
+  background-color: #ef4444;
+  box-shadow: inset 0 0 12px rgba(153, 27, 27, 0.6);
 }
 
 .hidden {

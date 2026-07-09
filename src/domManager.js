@@ -281,6 +281,8 @@ const domManager = (() => {
         return cell;
     });
     sunkShips.forEach((sunkShip) => {
+      sunkShip.classList.add("sunk");
+
       const sRow = Number(sunkShip.dataset.row);
       const sCol = Number(sunkShip.dataset.col);
 
@@ -305,7 +307,7 @@ const domManager = (() => {
             return cell;
         });
 
-        if (bufferCell) {
+        if (bufferCell && !bufferCell.classList.contains("hit")) {
           bufferCell.classList.add("miss");
           try {
             gameboard.populateMissed([bRow, bCol]);
