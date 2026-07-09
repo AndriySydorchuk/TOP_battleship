@@ -128,6 +128,8 @@ const domManager = (() => {
   }
 
   function showView(view) {
+    resetHeaderTitle();
+
     const views = document.querySelectorAll("[class*='view']");
 
     views.forEach((v) => {
@@ -169,22 +171,86 @@ const domManager = (() => {
     });
   }
 
-  function updateBoard(boardEl, gameboard) {
+  function updateBoard(
+    boardEl,
+    gameboard,
+    options = {
+      hideShips: false,
+    },
+  ) {
     const cells = boardEl.querySelectorAll(".board-cell");
 
-    cells.forEach((cell) => {
-      const cellRow = Number(cell.dataset.row);
-      const cellCol = Number(cell.dataset.col);
-
-      const gameboardCell = gameboard.board[cellRow][cellCol];
+    const missedCells = [...cells].filter((cell) => {
+      const cellCoordinates = [
+        Number(cell.dataset.row),
+        Number(cell.dataset.col),
+      ];
 
       if (
+        gameboard.missed.some(
+          (m) => JSON.stringify(cellCoordinates) === JSON.stringify(m),
+        )
+      )
+        return cell;
+    });
+    missedCells.forEach((mCell) => mCell.classList.add("miss"));
+
+    const hittedCells = [...cells].filter((cell) => {
+      const cellCoordinates = [
+        Number(cell.dataset.row),
+        Number(cell.dataset.col),
+      ];
+
+      if (
+        gameboard.hitted.some(
+          (h) => JSON.stringify(h) === JSON.stringify(cellCoordinates),
+        )
+      )
+        return cell;
+    });
+    hittedCells.forEach((hCell) => hCell.classList.add("hit"));
+
+    const shipCells = [...cells].filter((cell) => {
+      const cRow = Number(cell.dataset.row);
+      const cCol = Number(cell.dataset.col);
+
+      const gameboardCell = gameboard.board[cRow][cCol];
+
+      if (
+        !options.hideShips &&
         gameboardCell !== CONFIG.CELL.EMPTY &&
         gameboardCell !== CONFIG.CELL.BUFFER
-      ) {
-        cell.classList.add("ship");
-      }
+      )
+        return cell;
     });
+    shipCells.forEach((sCell) => sCell.classList.add("ship"));
+  }
+
+  function displayWinner(winner) {
+    const headerTitle = document.querySelector(".header-title");
+
+    if (winner.type === CONFIG.PLAYER_TYPE.COMPUTER) {
+      headerTitle.textContent = "LOSS";
+    } else {
+      headerTitle.textContent = "WIN";
+    }
+  }
+
+  function resetHeaderTitle() {
+    const headerTitle = document.querySelector(".header-title");
+    headerTitle.textContent = "Battleship";
+  }
+
+  function init() {
+    const main = document.querySelector("main");
+
+    const startView = createStartView();
+    const setupView = createSetupView();
+    const playView = createPlayView();
+
+    main.append(startView, setupView, playView);
+
+    showView(startView);
   }
 
   return {
@@ -195,6 +261,8 @@ const domManager = (() => {
     resetSetupView,
     resetPlayView,
     updateBoard,
+    displayWinner,
+    init,
   };
 })();
 

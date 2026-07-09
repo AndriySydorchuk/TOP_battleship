@@ -25,7 +25,7 @@ const eventManager = (() => {
     });
   }
 
-  function handleSetup() {
+  function handleComputerOption() {
     const computer = document.querySelector(".computer");
 
     computer.addEventListener("click", () => {
@@ -40,7 +40,7 @@ const eventManager = (() => {
     });
   }
 
-  function handlePlay() {
+  function handleGameStart() {
     const playBtn = document.querySelector(".play-btn");
 
     playBtn.addEventListener("click", () => {
@@ -50,10 +50,56 @@ const eventManager = (() => {
       const board = playView.querySelector(".board");
 
       domManager.updateBoard(board, currPlayer.board);
+
+      game.switchCurrPlayer();
     });
   }
 
-  return { handleViewSwitch, handleSetup, handlePlay };
+  function handleAttack() {
+    const playView = document.querySelector(".play-view");
+    const [firstBoard, secondBoard] = playView.querySelectorAll(".board");
+
+    const actionCells = secondBoard.querySelectorAll(".board-cell");
+
+    actionCells.forEach((cell) => {
+      cell.addEventListener("click", () => {
+        if (game.over()) return;
+
+        const coordinates = [
+          Number(cell.dataset.row),
+          Number(cell.dataset.col),
+        ];
+
+        game.play(coordinates);
+
+        if (game.over()) {
+          domManager.displayWinner(game.getWinner());
+        }
+
+        const players = game.getPlayers();
+
+        domManager.updateBoard(secondBoard, players.second.board, {
+          hideShips: true,
+        });
+        domManager.updateBoard(firstBoard, players.first.board);
+      });
+    });
+  }
+
+  function init() {
+    eventManager.handleViewSwitch();
+    eventManager.handleComputerOption();
+    eventManager.handleGameStart();
+    eventManager.handleAttack();
+  }
+
+  return {
+    handleViewSwitch,
+    handleComputerOption,
+    handleGameStart,
+    handleAttack,
+    init,
+  };
 })();
 
 export { eventManager };

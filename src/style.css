@@ -216,6 +216,14 @@ header {
   justify-content: space-around;
 }
 
+.board-cell.miss {
+  background-color: yellow;
+}
+
+.board-cell.hit {
+  background-color: red;
+}
+
 .hidden {
   display: none;
 }

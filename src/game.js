@@ -16,10 +16,6 @@ const game = (() => {
     player2.board = generateGameboard();
 
     currPlayer = player1;
-
-    console.log("player1", player1);
-    console.log("player2", player2);
-    console.log("currPlayer", currPlayer);
   }
 
   function generateGameboard() {
@@ -40,7 +36,88 @@ const game = (() => {
     return currPlayer;
   }
 
-  return { initPlayers, getCurrPlayer };
+  function switchCurrPlayer() {
+    currPlayer = currPlayer === player1 ? player2 : player1;
+  }
+
+  function attack(coordinates) {
+    currPlayer.board.receiveAttack(coordinates);
+  }
+
+  function switchTurn() {
+    switchCurrPlayer();
+
+    attack(generateCoordinates());
+
+    switchCurrPlayer();
+  }
+
+  function generateCoordinates() {
+    let coordinates;
+
+    do {
+      coordinates = [
+        Math.floor(Math.random() * CONFIG.BOARD_SIZE),
+        Math.floor(Math.random() * CONFIG.BOARD_SIZE),
+      ];
+    } while (
+      currPlayer.board.missed.some(
+        (m) => JSON.stringify(m) === JSON.stringify(coordinates),
+      ) ||
+      currPlayer.board.hitted.some(
+        (h) => JSON.stringify(h) === JSON.stringify(coordinates),
+      )
+    );
+
+    return coordinates;
+  }
+
+  function getPlayers() {
+    return {
+      first: player1,
+      second: player2,
+    };
+  }
+
+  function over() {
+    if (player1.board.allShipsSunk() || player2.board.allShipsSunk())
+      return true;
+
+    return false;
+  }
+
+  function getWinner() {
+    if (over()) {
+      return player1.board.allShipsSunk() ? player2 : player1;
+    }
+  }
+
+  function play(coordinates) {
+    if (over()) return;
+
+    try {
+      attack(coordinates);
+    } catch (error) {
+      console.warn(error.message);
+      return;
+    }
+
+    if (over()) return;
+
+    switchTurn();
+  }
+
+  return {
+    initPlayers,
+    getCurrPlayer,
+    switchCurrPlayer,
+    attack,
+    switchTurn,
+    getPlayers,
+    over,
+    getWinner,
+    play,
+  };
 })();
 
 export { game };
