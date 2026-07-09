@@ -175,4 +175,10 @@ export class Gameboard {
 
     return ships.every((ship) => ship.isSunk());
   }
+
+  populateMissed(coordinates) {
+    this.#checkCoordinatesValidity(coordinates, { checkAttacked: true });
+
+    this.#missed.push(coordinates);
+  }
 }

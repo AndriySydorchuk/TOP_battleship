@@ -178,38 +178,30 @@ const domManager = (() => {
       hideShips: false,
     },
   ) {
+    renderShots(boardEl, gameboard.missed, "miss");
+    renderShots(boardEl, gameboard.hitted, "hit");
+
+    if (!options.hideShips) {
+      renderShips(boardEl, gameboard);
+    }
+
+    renderSunkShipsBuffer(boardEl, gameboard);
+  }
+
+  function renderShots(boardEl, shots, shotEffect) {
     const cells = boardEl.querySelectorAll(".board-cell");
 
-    const missedCells = [...cells].filter((cell) => {
-      const cellCoordinates = [
-        Number(cell.dataset.row),
-        Number(cell.dataset.col),
-      ];
+    const shotCells = [...cells].filter((cell) => {
+      const cellCoords = [Number(cell.dataset.row), Number(cell.dataset.col)];
 
-      if (
-        gameboard.missed.some(
-          (m) => JSON.stringify(cellCoordinates) === JSON.stringify(m),
-        )
-      )
+      if (shots.some((s) => JSON.stringify(cellCoords) === JSON.stringify(s)))
         return cell;
     });
-    missedCells.forEach((mCell) => mCell.classList.add("miss"));
+    shotCells.forEach((sCell) => sCell.classList.add(shotEffect));
+  }
 
-    const hittedCells = [...cells].filter((cell) => {
-      const cellCoordinates = [
-        Number(cell.dataset.row),
-        Number(cell.dataset.col),
-      ];
-
-      if (
-        gameboard.hitted.some(
-          (h) => JSON.stringify(h) === JSON.stringify(cellCoordinates),
-        )
-      )
-        return cell;
-    });
-    hittedCells.forEach((hCell) => hCell.classList.add("hit"));
-
+  function renderShips(boardEl, gameboard) {
+    const cells = boardEl.querySelectorAll(".board-cell");
     const shipCells = [...cells].filter((cell) => {
       const cRow = Number(cell.dataset.row);
       const cCol = Number(cell.dataset.col);
@@ -217,13 +209,63 @@ const domManager = (() => {
       const gameboardCell = gameboard.board[cRow][cCol];
 
       if (
-        !options.hideShips &&
         gameboardCell !== CONFIG.CELL.EMPTY &&
         gameboardCell !== CONFIG.CELL.BUFFER
       )
         return cell;
     });
     shipCells.forEach((sCell) => sCell.classList.add("ship"));
+  }
+
+  function renderSunkShipsBuffer(boardEl, gameboard) {
+    const cells = boardEl.querySelectorAll(".board-cell");
+
+    const sunkShips = [...cells].filter((cell) => {
+      const cRow = Number(cell.dataset.row);
+      const cCol = Number(cell.dataset.col);
+
+      const gameboardCell = gameboard.board[cRow][cCol];
+
+      if (
+        gameboardCell !== CONFIG.CELL.EMPTY &&
+        gameboardCell !== CONFIG.CELL.BUFFER &&
+        gameboardCell.isSunk()
+      )
+        return cell;
+    });
+    sunkShips.forEach((sunkShip) => {
+      const sRow = Number(sunkShip.dataset.row);
+      const sCol = Number(sunkShip.dataset.col);
+
+      const bufferCoords = [
+        [sRow - 1, sCol],
+        [sRow + 1, sCol],
+        [sRow, sCol - 1],
+        [sRow, sCol + 1],
+        [sRow - 1, sCol - 1],
+        [sRow + 1, sCol + 1],
+        [sRow + 1, sCol - 1],
+        [sRow - 1, sCol + 1],
+      ];
+
+      bufferCoords.forEach((bCoord) => {
+        const [bRow, bCol] = bCoord;
+        const bufferCell = [...cells].find((cell) => {
+          if (
+            Number(cell.dataset.row) === bRow &&
+            Number(cell.dataset.col) === bCol
+          )
+            return cell;
+        });
+
+        if (bufferCell) {
+          bufferCell.classList.add("miss");
+          try {
+            gameboard.populateMissed([bRow, bCol]);
+          } catch (error) {}
+        }
+      });
+    });
   }
 
   function displayWinner(winner) {
