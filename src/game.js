@@ -42,12 +42,19 @@ const game = (() => {
 
   function attack(coordinates) {
     currPlayer.board.receiveAttack(coordinates);
+
+    return currPlayer.board.hitted.some(
+      (h) => JSON.stringify(h) === JSON.stringify(coordinates),
+    );
   }
 
   function switchTurn() {
     switchCurrPlayer();
 
-    attack(generateCoordinates());
+    let hitted;
+    do {
+      hitted = attack(generateCoordinates());
+    } while (hitted && !over());
 
     switchCurrPlayer();
   }
@@ -95,14 +102,17 @@ const game = (() => {
   function play(coordinates) {
     if (over()) return;
 
+    let hitted;
     try {
-      attack(coordinates);
+      hitted = attack(coordinates);
     } catch (error) {
       console.warn(error.message);
       return;
     }
 
     if (over()) return;
+
+    if (hitted) return;
 
     switchTurn();
   }
