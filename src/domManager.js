@@ -179,7 +179,7 @@ const domManager = (() => {
     },
   ) {
     renderShots(boardEl, gameboard.missed, "miss");
-    renderShots(boardEl, gameboard.hitted, "hit");
+    renderHitted(boardEl, gameboard);
 
     if (!options.hideShips) {
       renderShips(boardEl, gameboard);
@@ -198,6 +198,53 @@ const domManager = (() => {
         return cell;
     });
     shotCells.forEach((sCell) => sCell.classList.add(shotEffect));
+  }
+
+  function renderHitted(boardEl, gameboard) {
+    const cells = boardEl.querySelectorAll(".board-cell");
+
+    const hittedCells = [...cells].filter((cell) => {
+      const cellCoords = [Number(cell.dataset.row), Number(cell.dataset.col)];
+
+      if (
+        gameboard.hitted.some(
+          (h) => JSON.stringify(cellCoords) === JSON.stringify(h),
+        )
+      )
+        return cell;
+    });
+
+    hittedCells.forEach((hCell) => {
+      hCell.classList.add("hit");
+
+      const hRow = Number(hCell.dataset.row);
+      const hCol = Number(hCell.dataset.col);
+
+      const bufferCoords = [
+        [hRow - 1, hCol - 1],
+        [hRow + 1, hCol + 1],
+        [hRow + 1, hCol - 1],
+        [hRow - 1, hCol + 1],
+      ];
+
+      bufferCoords.forEach((bCoords) => {
+        const [bRow, bCol] = bCoords;
+        const bufferCell = [...cells].find((cell) => {
+          if (
+            Number(cell.dataset.row) === bRow &&
+            Number(cell.dataset.col) === bCol
+          )
+            return cell;
+        });
+
+        if (bufferCell) {
+          bufferCell.classList.add("miss");
+          try {
+            gameboard.populateMissed([bRow, bCol]);
+          } catch (error) {}
+        }
+      });
+    });
   }
 
   function renderShips(boardEl, gameboard) {
