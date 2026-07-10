@@ -42,11 +42,7 @@ function generatePlacementCoords(shipLen, orientation, board) {
   do {
     valid = true;
 
-    coords = shiftCoordinates(
-      shipLen,
-      [generateCoord(), generateCoord()],
-      orientation,
-    );
+    coords = shiftCoordinates(shipLen, generateRandomCoords(), orientation);
 
     const dRow = isHorizontal(orientation) ? 0 : 1;
     const dCol = isHorizontal(orientation) ? 1 : 0;
@@ -82,10 +78,30 @@ function shiftCoordinates(shipLen, coordinates, orientation) {
   return [row, col];
 }
 
-function generateCoord() {
-  return Math.floor(Math.random() * CONFIG.BOARD_SIZE);
+function generateRandomCoords() {
+  return [
+    Math.floor(Math.random() * CONFIG.BOARD_SIZE),
+    Math.floor(Math.random() * CONFIG.BOARD_SIZE),
+  ];
 }
 
 function isHorizontal(orientation) {
   return orientation === CONFIG.ORIENTATION.HORIZONTAL ? true : false;
+}
+
+export function containsCoords(arr, coords) {
+  return arr.some((e) => JSON.stringify(e) === JSON.stringify(coords));
+}
+
+export function generateAttackCoords(gameboard) {
+  let coords;
+
+  do {
+    coords = generateRandomCoords();
+  } while (
+    containsCoords(gameboard.missed, coords) ||
+    containsCoords(gameboard.hitted, coords)
+  );
+
+  return coords;
 }
