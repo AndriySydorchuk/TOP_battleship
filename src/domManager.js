@@ -88,9 +88,9 @@ const domManager = (() => {
     const shipPool = document.createElement("div");
     shipPool.classList.add("ship-pool");
 
-    CONFIG.SHIP_POOL.forEach((entry) => {
+    CONFIG.SHIP_LENGTHS.forEach((SHIP_LEN) => {
       const ship = document.createElement("div");
-      ship.classList.add("ship", `ship-${entry.shipLen}`);
+      ship.classList.add("ship", `ship-${SHIP_LEN}`);
 
       shipPool.append(ship);
     });
@@ -178,6 +178,10 @@ const domManager = (() => {
       hideShips: false,
     },
   ) {
+    if (gameboard === null) return;
+
+    resetBoard(boardEl);
+
     renderShots(boardEl, gameboard.missed, "miss");
     renderHitted(boardEl, gameboard);
 
@@ -186,6 +190,14 @@ const domManager = (() => {
     }
 
     renderSunkShipsBuffer(boardEl, gameboard);
+  }
+
+  function resetBoard(boardEl) {
+    const cells = boardEl.querySelectorAll(".board-cell");
+
+    cells.forEach((cell) => {
+      cell.className = "board-cell";
+    });
   }
 
   function renderShots(boardEl, shots, shotEffect) {

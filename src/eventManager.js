@@ -1,5 +1,6 @@
 import { domManager } from "./domManager";
 import { game } from "./game";
+import { generateGameboard } from "./utils";
 
 const eventManager = (() => {
   function handleViewSwitch() {
@@ -20,6 +21,8 @@ const eventManager = (() => {
 
     const playBtn = document.querySelector(".play-btn");
     playBtn.addEventListener("click", () => {
+      if (game.getCurrPlayer().board === null) return;
+
       domManager.resetPlayView();
       domManager.showView(playView);
     });
@@ -45,6 +48,7 @@ const eventManager = (() => {
 
     playBtn.addEventListener("click", () => {
       const currPlayer = game.getCurrPlayer();
+      if (currPlayer.board === null) return;
 
       const playView = document.querySelector(".play-view");
       const board = playView.querySelector(".board");
@@ -87,10 +91,24 @@ const eventManager = (() => {
   }
 
   function init() {
-    eventManager.handleViewSwitch();
-    eventManager.handleComputerOption();
-    eventManager.handleGameStart();
-    eventManager.handleAttack();
+    handleViewSwitch();
+    handleComputerOption();
+    handleShuffle();
+    handleGameStart();
+    handleAttack();
+  }
+
+  function handleShuffle() {
+    const setupView = document.querySelector(".setup-view");
+    const board = setupView.querySelector(".board");
+    const shuffleBtn = document.querySelector(".shuffle-btn");
+
+    shuffleBtn.addEventListener("click", () => {
+      const currPlayer = game.getCurrPlayer();
+      currPlayer.board = generateGameboard();
+
+      domManager.updateBoard(board, currPlayer.board);
+    });
   }
 
   return {
