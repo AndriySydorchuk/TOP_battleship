@@ -1,8 +1,16 @@
 import { domManager } from "./domManager";
 import { game } from "./game";
-import { generateGameboard } from "./utils";
+import { extractCoords, generateGameboard } from "./utils";
 
 const eventManager = (() => {
+  function init() {
+    handleViewSwitch();
+    handleComputerOption();
+    handleShuffle();
+    handleGameStart();
+    handleAttack();
+  }
+
   function handleViewSwitch() {
     const startView = document.querySelector(".start-view");
     const setupView = document.querySelector(".setup-view");
@@ -43,6 +51,19 @@ const eventManager = (() => {
     });
   }
 
+  function handleShuffle() {
+    const setupView = document.querySelector(".setup-view");
+    const board = setupView.querySelector(".board");
+    const shuffleBtn = document.querySelector(".shuffle-btn");
+
+    shuffleBtn.addEventListener("click", () => {
+      const currPlayer = game.getCurrPlayer();
+      currPlayer.board = generateGameboard();
+
+      domManager.updateBoard(board, currPlayer.board);
+    });
+  }
+
   function handleGameStart() {
     const playBtn = document.querySelector(".play-btn");
 
@@ -69,16 +90,9 @@ const eventManager = (() => {
       cell.addEventListener("click", () => {
         if (game.over()) return;
 
-        const coordinates = [
-          Number(cell.dataset.row),
-          Number(cell.dataset.col),
-        ];
+        game.play(extractCoords(cell));
 
-        game.play(coordinates);
-
-        if (game.over()) {
-          domManager.displayWinner(game.getWinner());
-        }
+        if (game.over()) domManager.displayWinner(game.getWinner());
 
         const players = game.getPlayers();
 
@@ -90,32 +104,7 @@ const eventManager = (() => {
     });
   }
 
-  function init() {
-    handleViewSwitch();
-    handleComputerOption();
-    handleShuffle();
-    handleGameStart();
-    handleAttack();
-  }
-
-  function handleShuffle() {
-    const setupView = document.querySelector(".setup-view");
-    const board = setupView.querySelector(".board");
-    const shuffleBtn = document.querySelector(".shuffle-btn");
-
-    shuffleBtn.addEventListener("click", () => {
-      const currPlayer = game.getCurrPlayer();
-      currPlayer.board = generateGameboard();
-
-      domManager.updateBoard(board, currPlayer.board);
-    });
-  }
-
   return {
-    handleViewSwitch,
-    handleComputerOption,
-    handleGameStart,
-    handleAttack,
     init,
   };
 })();
