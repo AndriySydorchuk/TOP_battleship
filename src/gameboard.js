@@ -27,6 +27,10 @@ export class Gameboard {
     return this.#hitted;
   }
 
+  cell(coords) {
+    return this.#board[coords[0]][coords[1]];
+  }
+
   placeShip(ship, coordinates, orientation = CONFIG.ORIENTATION.HORIZONTAL) {
     this.#checkShipValidity(ship);
 

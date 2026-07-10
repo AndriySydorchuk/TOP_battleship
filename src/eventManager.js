@@ -10,7 +10,7 @@ const eventManager = (() => {
 
     const computer = document.querySelector(".computer");
     computer.addEventListener("click", () => {
-      domManager.resetSetupView();
+      domManager.resetView(setupView);
       domManager.showView(setupView);
     });
 
@@ -23,7 +23,7 @@ const eventManager = (() => {
     playBtn.addEventListener("click", () => {
       if (game.getCurrPlayer().board === null) return;
 
-      domManager.resetPlayView();
+      domManager.resetView(playView);
       domManager.showView(playView);
     });
   }

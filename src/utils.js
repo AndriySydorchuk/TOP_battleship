@@ -105,3 +105,29 @@ export function generateAttackCoords(gameboard) {
 
   return coords;
 }
+
+export function resetCell(cellEl) {
+  cell.className = "board-cell";
+}
+
+export function extractCoords(cellEl) {
+  return [Number(cellEl.dataset.row), Number(cellEl.dataset.col)];
+}
+
+export function isEqual(arr1, arr2) {
+  return JSON.stringify(arr1) === JSON.stringify(arr2);
+}
+
+export function calcBufferCoords(coords, options = { diagonalOnly: false }) {
+  const [row, col] = coords;
+
+  const offsets = options.diagonalOnly
+    ? CONFIG.BUFFER_OFFSETS.DIAGONAL
+    : CONFIG.BUFFER_OFFSETS.ALL;
+
+  return offsets.map(([dRow, dCol]) => [row + dRow, col + dCol]);
+}
+
+export function isShip(value) {
+  return value instanceof Ship;
+}
