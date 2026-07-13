@@ -35,7 +35,7 @@ const eventManager = (() => {
 
     const playBtn = document.querySelector(".play-btn");
     playBtn.addEventListener("click", () => {
-      if (game.getCurrPlayer().board === null) return;
+      if (game.getCurrentPlayer().board === null) return;
 
       domManager.resetView(playView);
       domManager.showView(playView);
@@ -48,12 +48,12 @@ const eventManager = (() => {
     computer.addEventListener("click", () => {
       game.initPlayers();
 
-      const currPlayer = game.getCurrPlayer();
+      const currentPlayer = game.getCurrentPlayer();
 
       const setupView = document.querySelector(".setup-view");
       const board = setupView.querySelector(".board");
 
-      domManager.updateBoard(board, currPlayer.board);
+      domManager.updateBoard(board, currentPlayer.board);
     });
   }
 
@@ -63,10 +63,10 @@ const eventManager = (() => {
     const shuffleBtn = document.querySelector(".shuffle-btn");
 
     shuffleBtn.addEventListener("click", () => {
-      const currPlayer = game.getCurrPlayer();
-      currPlayer.board = generateGameboard();
+      const currentPlayer = game.getCurrentPlayer();
+      currentPlayer.board = generateGameboard();
 
-      domManager.updateBoard(board, currPlayer.board);
+      domManager.updateBoard(board, currentPlayer.board);
     });
   }
 
@@ -74,16 +74,16 @@ const eventManager = (() => {
     const playBtn = document.querySelector(".play-btn");
 
     playBtn.addEventListener("click", () => {
-      const currPlayer = game.getCurrPlayer();
-      if (currPlayer.board === null) return;
+      const currentPlayer = game.getCurrentPlayer();
+      if (currentPlayer.board === null) return;
 
       const playView = document.querySelector(".play-view");
       const [playerBoard, computerBoard] = playView.querySelectorAll(".board");
 
-      domManager.updateBoard(playerBoard, currPlayer.board);
+      domManager.updateBoard(playerBoard, currentPlayer.board);
       domManager.setActiveBoard(computerBoard);
 
-      game.switchCurrPlayer();
+      game.switchCurrentPlayer();
     });
   }
 
@@ -106,7 +106,7 @@ const eventManager = (() => {
 
   function playerTurn(clickedCell, boards) {
     const [playerBoard, computerBoard] = boards;
-    const currentPlayer = game.getCurrPlayer();
+    const currentPlayer = game.getCurrentPlayer();
 
     let hitted;
     try {
@@ -130,7 +130,7 @@ const eventManager = (() => {
   async function computerTurn(boards) {
     const [playerBoard, computerBoard] = boards;
 
-    let currentPlayer = game.switchCurrPlayer();
+    let currentPlayer = game.switchCurrentPlayer();
     domManager.setActiveBoard(playerBoard);
 
     let hitted;
@@ -148,7 +148,7 @@ const eventManager = (() => {
       }
     } while (hitted);
 
-    game.switchCurrPlayer();
+    game.switchCurrentPlayer();
     await delay(1000);
     domManager.setActiveBoard(computerBoard);
   }

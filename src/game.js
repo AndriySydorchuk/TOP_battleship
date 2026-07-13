@@ -9,44 +9,43 @@ import { Gameboard } from "./gameboard";
 import { Ship } from "./ship";
 
 const game = (() => {
-  let player1;
-  let player2;
-  let currPlayer;
+  let player;
+  let computer;
+  let current;
 
   function initPlayers() {
-    player1 = new Player(CONFIG.PLAYER_TYPE.REAL);
+    player = new Player(CONFIG.PLAYER_TYPE.REAL);
 
-    player2 = new Player(CONFIG.PLAYER_TYPE.COMPUTER, generateGameboard());
+    computer = new Player(CONFIG.PLAYER_TYPE.COMPUTER, generateGameboard());
 
-    currPlayer = player1;
+    current = player;
   }
 
   function over() {
-    if (player1.board.allShipsSunk() || player2.board.allShipsSunk())
+    if (player.board.allShipsSunk() || computer.board.allShipsSunk())
       return true;
 
     return false;
   }
 
   function attack(coordinates) {
-    const board = currPlayer.board;
-    board.receiveAttack(coordinates);
+    current.board.receiveAttack(coordinates);
 
-    return containsCoords(board.hitted, coordinates);
+    return containsCoords(current.board.hitted, coordinates);
   }
 
-  function switchCurrPlayer() {
-    currPlayer = currPlayer === player1 ? player2 : player1;
-    return currPlayer;
+  function switchCurrentPlayer() {
+    current = current === player ? computer : player;
+    return current;
   }
 
-  function getCurrPlayer() {
-    return currPlayer;
+  function getCurrentPlayer() {
+    return current;
   }
 
   function getWinner() {
     if (over()) {
-      return player1.board.allShipsSunk() ? player2 : player1;
+      return player.board.allShipsSunk() ? computer : player;
     }
   }
 
@@ -54,8 +53,8 @@ const game = (() => {
     initPlayers,
     over,
     attack,
-    switchCurrPlayer,
-    getCurrPlayer,
+    switchCurrentPlayer,
+    getCurrentPlayer,
     getWinner,
   };
 })();
