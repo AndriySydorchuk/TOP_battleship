@@ -22,18 +22,19 @@ const eventManager = (() => {
     const setupView = document.querySelector(".setup-view");
     const playView = document.querySelector(".play-view");
 
-    const computer = document.querySelector(".computer");
-    computer.addEventListener("click", () => {
+    const computerOption = document.querySelector(".computer");
+    const returnBtns = document.querySelectorAll(".return-btn");
+    const playBtn = document.querySelector(".play-btn");
+
+    computerOption.addEventListener("click", () => {
       domManager.resetView(setupView);
       domManager.showView(setupView);
     });
 
-    const returnBtns = document.querySelectorAll(".return-btn");
     returnBtns.forEach((returnBtn) => {
       returnBtn.addEventListener("click", () => domManager.showView(startView));
     });
 
-    const playBtn = document.querySelector(".play-btn");
     playBtn.addEventListener("click", () => {
       if (game.getCurrentPlayer().board === null) return;
 
@@ -43,29 +44,24 @@ const eventManager = (() => {
   }
 
   function handleComputerOption() {
-    const computer = document.querySelector(".computer");
+    const computerOption = document.querySelector(".computer");
 
-    computer.addEventListener("click", () => {
+    computerOption.addEventListener("click", () => {
+      const board = document.querySelector(".setup-view .board");
       game.initPlayers();
 
-      const currentPlayer = game.getCurrentPlayer();
-
-      const setupView = document.querySelector(".setup-view");
-      const board = setupView.querySelector(".board");
-
-      domManager.updateBoard(board, currentPlayer.board);
+      domManager.updateBoard(board, game.getCurrentPlayer().board);
     });
   }
 
   function handleShuffle() {
-    const setupView = document.querySelector(".setup-view");
-    const board = setupView.querySelector(".board");
+    const board = document.querySelector(".setup-view .board");
     const shuffleBtn = document.querySelector(".shuffle-btn");
 
     shuffleBtn.addEventListener("click", () => {
       const currentPlayer = game.getCurrentPlayer();
-      currentPlayer.board = generateGameboard();
 
+      currentPlayer.board = generateGameboard();
       domManager.updateBoard(board, currentPlayer.board);
     });
   }
@@ -77,8 +73,8 @@ const eventManager = (() => {
       const currentPlayer = game.getCurrentPlayer();
       if (currentPlayer.board === null) return;
 
-      const playView = document.querySelector(".play-view");
-      const [playerBoard, computerBoard] = playView.querySelectorAll(".board");
+      const [playerBoard, computerBoard] =
+        document.querySelectorAll(".play-view .board");
 
       domManager.updateBoard(playerBoard, currentPlayer.board);
       domManager.setActiveBoard(computerBoard);
@@ -88,8 +84,7 @@ const eventManager = (() => {
   }
 
   function handleAttack() {
-    const playView = document.querySelector(".play-view");
-    const boards = playView.querySelectorAll(".board");
+    const boards = document.querySelectorAll(".play-view .board");
     const actionCells = boards[1].querySelectorAll(".board-cell");
 
     actionCells.forEach((cell) => {
@@ -105,7 +100,7 @@ const eventManager = (() => {
   }
 
   function playerTurn(clickedCell, boards) {
-    const [playerBoard, computerBoard] = boards;
+    const computerBoard = boards[1];
     const currentPlayer = game.getCurrentPlayer();
 
     let hitted;
