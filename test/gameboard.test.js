@@ -49,6 +49,16 @@ describe("testing gameboard behaviour", () => {
       expect(() => b.placeShip(s, [0, 0])).toThrow(Error);
     });
 
+    test("throws for crossing coordinates", () => {
+      const b = new Gameboard();
+      const s = new Ship(3);
+      const s2 = new Ship(4);
+
+      b.placeShip(s, [0, 9]);
+
+      expect(() => b.placeShip(s2, [0, 5])).toThrow();
+    });
+
     test("throws an error if ship would be adjacent to an existing ship", () => {
       const b = new Gameboard();
       const s = new Ship(2);
