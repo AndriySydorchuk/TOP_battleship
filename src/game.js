@@ -21,23 +21,6 @@ const game = (() => {
     currPlayer = player1;
   }
 
-  function play(coordinates) {
-    if (over()) return;
-
-    let hitted;
-    try {
-      hitted = attack(coordinates);
-    } catch (error) {
-      return;
-    }
-
-    if (over()) return;
-
-    if (hitted) return;
-
-    switchTurn();
-  }
-
   function over() {
     if (player1.board.allShipsSunk() || player2.board.allShipsSunk())
       return true;
@@ -52,30 +35,13 @@ const game = (() => {
     return containsCoords(board.hitted, coordinates);
   }
 
-  function switchTurn() {
-    switchCurrPlayer();
-
-    let hitted;
-    do {
-      hitted = attack(generateAttackCoords(currPlayer.board));
-    } while (hitted && !over());
-
-    switchCurrPlayer();
-  }
-
   function switchCurrPlayer() {
     currPlayer = currPlayer === player1 ? player2 : player1;
+    return currPlayer;
   }
 
   function getCurrPlayer() {
     return currPlayer;
-  }
-
-  function getPlayers() {
-    return {
-      first: player1,
-      second: player2,
-    };
   }
 
   function getWinner() {
@@ -86,13 +52,10 @@ const game = (() => {
 
   return {
     initPlayers,
-    play,
     over,
     attack,
-    switchTurn,
     switchCurrPlayer,
     getCurrPlayer,
-    getPlayers,
     getWinner,
   };
 })();

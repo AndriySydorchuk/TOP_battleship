@@ -289,12 +289,38 @@ const domManager = (() => {
     }
   }
 
+  function activateBoard(boardEl) {
+    boardEl.classList.remove("disabled");
+    boardEl.classList.add("active");
+  }
+
+  function disableBoard(boardEl) {
+    boardEl.classList.remove("active");
+    boardEl.classList.add("disabled");
+  }
+
+  function setActiveBoard(boardToActivate) {
+    const playView = document.querySelector(".play-view");
+    const boards = playView.querySelectorAll(".board");
+
+    boards.forEach((board) => {
+      if (board === boardToActivate) {
+        activateBoard(board);
+      } else {
+        disableBoard(board);
+      }
+    });
+  }
+
   return {
     init,
     showView,
     resetView,
     updateBoard,
     displayWinner,
+    activateBoard,
+    disableBoard,
+    setActiveBoard,
   };
 })();
 

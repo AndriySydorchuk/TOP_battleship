@@ -1,6 +1,12 @@
 import { domManager } from "./domManager";
 import { game } from "./game";
-import { extractCoords, generateGameboard } from "./utils";
+import {
+  extractCoords,
+  generateAttackCoords,
+  generateGameboard,
+  delay,
+} from "./utils";
+import { CONFIG } from "./config";
 
 const eventManager = (() => {
   function init() {
@@ -72,9 +78,10 @@ const eventManager = (() => {
       if (currPlayer.board === null) return;
 
       const playView = document.querySelector(".play-view");
-      const board = playView.querySelector(".board");
+      const [playerBoard, computerBoard] = playView.querySelectorAll(".board");
 
-      domManager.updateBoard(board, currPlayer.board);
+      domManager.updateBoard(playerBoard, currPlayer.board);
+      domManager.setActiveBoard(computerBoard);
 
       game.switchCurrPlayer();
     });
@@ -82,26 +89,68 @@ const eventManager = (() => {
 
   function handleAttack() {
     const playView = document.querySelector(".play-view");
-    const [firstBoard, secondBoard] = playView.querySelectorAll(".board");
-
-    const actionCells = secondBoard.querySelectorAll(".board-cell");
+    const boards = playView.querySelectorAll(".board");
+    const actionCells = boards[1].querySelectorAll(".board-cell");
 
     actionCells.forEach((cell) => {
       cell.addEventListener("click", () => {
         if (game.over()) return;
 
-        game.play(extractCoords(cell));
+        let hitted = playerTurn(cell, boards);
+        if (hitted) return;
 
-        if (game.over()) domManager.displayWinner(game.getWinner());
-
-        const players = game.getPlayers();
-
-        domManager.updateBoard(secondBoard, players.second.board, {
-          hideShips: true,
-        });
-        domManager.updateBoard(firstBoard, players.first.board);
+        computerTurn(boards);
       });
     });
+  }
+
+  function playerTurn(clickedCell, boards) {
+    const [playerBoard, computerBoard] = boards;
+    const currentPlayer = game.getCurrPlayer();
+
+    let hitted;
+    try {
+      hitted = game.attack(extractCoords(clickedCell));
+
+      domManager.updateBoard(computerBoard, currentPlayer.board, {
+        hideShips: true,
+      });
+      domManager.setActiveBoard(computerBoard);
+    } catch (error) {
+      return;
+    }
+
+    if (game.over()) {
+      domManager.displayWinner(game.getWinner());
+    }
+
+    return hitted;
+  }
+
+  async function computerTurn(boards) {
+    const [playerBoard, computerBoard] = boards;
+
+    let currentPlayer = game.switchCurrPlayer();
+    domManager.setActiveBoard(playerBoard);
+
+    let hitted;
+    do {
+      await delay(1000);
+
+      hitted = game.attack(generateAttackCoords(currentPlayer.board));
+
+      domManager.updateBoard(playerBoard, currentPlayer.board);
+      domManager.setActiveBoard(playerBoard);
+
+      if (game.over()) {
+        domManager.displayWinner(game.getWinner());
+        break;
+      }
+    } while (hitted);
+
+    game.switchCurrPlayer();
+    await delay(1000);
+    domManager.setActiveBoard(computerBoard);
   }
 
   return {

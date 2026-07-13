@@ -131,3 +131,9 @@ export function calcBufferCoords(coords, options = { diagonalOnly: false }) {
 export function isShip(value) {
   return value instanceof Ship;
 }
+
+export async function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+}
