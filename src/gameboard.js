@@ -35,7 +35,9 @@ export class Gameboard {
     this.#checkShipValidity(ship);
 
     coordinates = this.#shiftCoordinates(ship, coordinates, orientation);
-    this.#checkCoordinatesValidity(coordinates, { checkOccupied: true });
+    this.#checkCoordinatesValidity(coordinates, {
+      checkOccupied: { shipLen: ship.length },
+    });
 
     this.#checkOrientationValidity(orientation.toLowerCase());
 
@@ -62,7 +64,10 @@ export class Gameboard {
 
   #checkCoordinatesValidity(
     coordinates,
-    options = { checkOccupied: false, checkAttacked: false },
+    options = {
+      checkOccupied: { shipLen: null },
+      checkAttacked: false,
+    },
   ) {
     const [row, col] = coordinates;
 
@@ -79,8 +84,18 @@ export class Gameboard {
     )
       throw new RangeError("coordinates are out of bounds");
 
-    if (options.checkOccupied && this.#board[row][col])
-      throw new Error("provided coordinates are already occupied");
+    if (options.checkOccupied) {
+      //dont include first element
+      options.checkOccupied.shipLen--;
+
+      if (
+        this.#board[row][col] ||
+        this.#board?.[row + options.checkOccupied.shipLen]?.[col] ||
+        this.#board?.[row]?.[col + options.checkOccupied.shipLen]
+      ) {
+        throw new Error("provided coordinates are already occupied");
+      }
+    }
 
     if (
       options.checkAttacked &&
