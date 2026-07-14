@@ -93,7 +93,7 @@ export function containsCoords(arr, coords) {
   return arr.some((e) => JSON.stringify(e) === JSON.stringify(coords));
 }
 
-export function generateAttackCoords(gameboard) {
+function generateValidRandomCoords(gameboard) {
   let coords;
 
   do {
@@ -104,6 +104,53 @@ export function generateAttackCoords(gameboard) {
   );
 
   return coords;
+}
+
+export function generateAttackCoords(gameboard) {
+  let possibleHits = [];
+
+  gameboard.hitted.forEach((hittedCoords) => {
+    possibleHits = [
+      ...possibleHits,
+      ...generatePossibleHitCoords(gameboard, hittedCoords),
+    ];
+  });
+
+  if (possibleHits.length === 0) {
+    return generateValidRandomCoords(gameboard);
+  }
+
+  const randomIndex = Math.floor(Math.random() * possibleHits.length);
+
+  return possibleHits[randomIndex];
+}
+
+function generatePossibleHitCoords(gameboard, hittedCoords) {
+  const [hRow, hCol] = hittedCoords;
+  const possibleHitCoords = [
+    [hRow - 1, hCol],
+    [hRow, hCol + 1],
+    [hRow + 1, hCol],
+    [hRow, hCol - 1],
+  ].filter((coords) => {
+    const [row, col] = coords;
+
+    if (
+      row < 0 ||
+      row >= CONFIG.BOARD_SIZE ||
+      col < 0 ||
+      col >= CONFIG.BOARD_SIZE
+    )
+      return false;
+
+    if (containsCoords(gameboard.hitted, coords)) return false;
+
+    if (containsCoords(gameboard.missed, coords)) return false;
+
+    return true;
+  });
+
+  return possibleHitCoords;
 }
 
 export function resetCell(cellEl) {
