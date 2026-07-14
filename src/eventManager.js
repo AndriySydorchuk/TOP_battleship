@@ -100,7 +100,7 @@ const eventManager = (() => {
   }
 
   function playerTurn(clickedCell, boards) {
-    const computerBoard = boards[1];
+    const [playerBoard, computerBoard] = boards;
     const currentPlayer = game.getCurrentPlayer();
 
     let hitted;
@@ -117,6 +117,8 @@ const eventManager = (() => {
 
     if (game.over()) {
       domManager.displayWinner(game.getWinner());
+      domManager.setWonBoard(computerBoard);
+      domManager.setLostBoard(playerBoard);
     }
 
     return hitted;
@@ -139,11 +141,19 @@ const eventManager = (() => {
 
       if (game.over()) {
         domManager.displayWinner(game.getWinner());
+        domManager.setWonBoard(playerBoard);
+        domManager.setLostBoard(computerBoard);
         break;
       }
     } while (hitted);
 
-    game.switchCurrentPlayer();
+    currentPlayer = game.switchCurrentPlayer();
+
+    if (game.over()) {
+      domManager.updateBoard(computerBoard, currentPlayer.board);
+      domManager.setLostBoard(computerBoard);
+    }
+
     await delay(1000);
     domManager.setActiveBoard(computerBoard);
   }

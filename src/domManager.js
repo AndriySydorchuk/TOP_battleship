@@ -141,6 +141,20 @@ const domManager = (() => {
   function showView(view) {
     resetHeaderTitle();
 
+    switch (view.classList[0]) {
+      case "start-view":
+        updateHeaderTitle(CONFIG.HEADER.DEFAULT);
+        break;
+      case "setup-view":
+        updateHeaderTitle(CONFIG.HEADER.SETUP);
+        break;
+      case "play-view":
+        updateHeaderTitle(CONFIG.HEADER.PLAY);
+        break;
+      default:
+        break;
+    }
+
     const views = document.querySelectorAll("[class*='view']");
 
     views.forEach((v) => {
@@ -154,7 +168,9 @@ const domManager = (() => {
 
   function resetHeaderTitle() {
     const headerTitle = document.querySelector(".header-title");
+
     headerTitle.textContent = CONFIG.HEADER.DEFAULT;
+    headerTitle.className = "header-title";
   }
 
   function updateBoard(
@@ -284,8 +300,10 @@ const domManager = (() => {
 
     if (winner.type === CONFIG.PLAYER_TYPE.COMPUTER) {
       headerTitle.textContent = CONFIG.HEADER.LOSS;
+      headerTitle.classList.add("lost");
     } else {
       headerTitle.textContent = CONFIG.HEADER.WIN;
+      headerTitle.classList.add("won");
     }
   }
 
@@ -312,6 +330,19 @@ const domManager = (() => {
     });
   }
 
+  function setWonBoard(boardEl) {
+    boardEl.className = "board over won";
+  }
+
+  function setLostBoard(boardEl) {
+    boardEl.className = "board over lost";
+  }
+
+  function updateHeaderTitle(text) {
+    const headerTitle = document.querySelector(".header-title");
+    headerTitle.textContent = text;
+  }
+
   return {
     init,
     showView,
@@ -321,6 +352,8 @@ const domManager = (() => {
     activateBoard,
     disableBoard,
     setActiveBoard,
+    setWonBoard,
+    setLostBoard,
   };
 })();
 

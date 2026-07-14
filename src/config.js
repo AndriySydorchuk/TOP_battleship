@@ -48,6 +48,8 @@ const CONFIG = (() => {
     DEFAULT: "Battleship",
     WIN: "WIN",
     LOSS: "LOSS",
+    SETUP: "Deploy your fleet",
+    PLAY: "Combat",
   };
 
   return {
