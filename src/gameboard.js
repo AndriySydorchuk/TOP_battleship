@@ -86,12 +86,12 @@ export class Gameboard {
 
     if (options.checkOccupied) {
       //dont include first element
-      options.checkOccupied.shipLen--;
+      const sLen = options.checkOccupied.shipLen - 1;
 
       if (
         this.#board[row][col] ||
-        this.#board?.[row + options.checkOccupied.shipLen]?.[col] ||
-        this.#board?.[row]?.[col + options.checkOccupied.shipLen]
+        this.#board?.[row + sLen]?.[col] ||
+        this.#board?.[row]?.[col + sLen]
       ) {
         throw new Error("provided coordinates are already occupied");
       }
