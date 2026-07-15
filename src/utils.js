@@ -153,10 +153,6 @@ function generatePossibleHitCoords(gameboard, hittedCoords) {
   return possibleHitCoords;
 }
 
-export function resetCell(cellEl) {
-  cell.className = "board-cell";
-}
-
 export function extractCoords(cellEl) {
   return [Number(cellEl.dataset.row), Number(cellEl.dataset.col)];
 }
