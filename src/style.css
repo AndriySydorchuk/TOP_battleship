@@ -139,19 +139,17 @@ header {
 }
 
 .setup-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 350px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0 60px;
   margin-top: 20px;
 }
 
 .board {
-  grid-row: 1/3;
   width: 450px;
   height: 450px;
   margin: 20px;
-  margin-left: 40px;
   border: 1px solid #334155;
   border-radius: 4px;
   background-color: #0f1f35;
@@ -171,17 +169,12 @@ header {
   transition: background-color 0.15s ease-in-out;
 }
 
-.board-cell:hover {
-  background-color: rgba(125, 211, 252, 0.05);
+#computer .board-cell {
+  cursor: crosshair;
 }
 
-.ship-pool {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(6, 30px);
-  grid-template-rows: repeat(6, 30px);
-  padding: 20px;
-  gap: 45px;
+#computer .board-cell:hover {
+  background-color: rgba(125, 211, 252, 0.05);
 }
 
 .ship {
@@ -192,58 +185,14 @@ header {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-  cursor: grab;
-  transition: all 0.3s ease-in-out;
-}
-
-.ship:hover {
-  background-color: #7dd3fc;
-  border-color: #38bdf8;
-  box-shadow: 0px 0px 12px rgba(125, 211, 252, 0.3);
-}
-
-.ship:active {
-  cursor: grabbing;
-}
-
-.ship-4 {
-  grid-column: span 6;
-  width: calc(45px * 4);
-}
-
-.ship-3 {
-  grid-column: span 3;
-  width: calc(45px * 3);
-}
-
-.ship-2 {
-  grid-column: span 2;
-  width: calc(45px * 2);
-}
-
-.ship-1 {
-  width: 45px;
-}
-
-.ship.missing {
-  background-color: #1e293b;
-  border: 1px dashed #334155;
-  box-shadow: none;
-  cursor: default;
-}
-
-.ship.missing:hover {
-  background-color: #1e293b;
-  border-color: #334155;
-  box-shadow: none;
 }
 
 .actions {
   display: flex;
   justify-content: space-between;
   height: 100px;
-  padding: 0 60px 0 20px;
   margin-top: 20px;
+  gap: 100px;
 }
 
 .shuffle-btn,
@@ -303,11 +252,6 @@ header {
   opacity: 0.5;
   border: 1px dashed #334155;
   box-shadow: none;
-}
-
-.board-cell.active-cell:hover {
-  background-color: rgba(125, 211, 252, 0.08);
-  cursor: crosshair;
 }
 
 .board.over .board-cell.ship {

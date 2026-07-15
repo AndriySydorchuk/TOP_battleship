@@ -59,10 +59,9 @@ const domManager = (() => {
     const setupContainer = createElement("div", "setup-container");
 
     const board = createBoard();
-    const shipPool = createShipPool();
     const actions = createActions();
 
-    setupContainer.append(board, shipPool, actions);
+    setupContainer.append(board, actions);
 
     setupView.append(returnSection, setupContainer);
 
@@ -103,19 +102,6 @@ const domManager = (() => {
     return board;
   }
 
-  function createShipPool() {
-    const shipPool = createElement("div", "ship-pool");
-
-    CONFIG.SHIP_LENGTHS.forEach((SHIP_LEN) => {
-      const ship = createElement("div", "ship");
-      ship.classList.add(`ship-${SHIP_LEN}`);
-
-      shipPool.append(ship);
-    });
-
-    return shipPool;
-  }
-
   function createActions() {
     const actions = createElement("div", "actions");
 
@@ -133,7 +119,11 @@ const domManager = (() => {
   function createPlayView() {
     const playView = createElement("div", "play-view");
 
-    playView.append(createReturnSection(), createBoard(), createBoard());
+    const playerBoard = createBoard();
+    const computerBoard = createBoard();
+    computerBoard.id = "computer";
+
+    playView.append(createReturnSection(), playerBoard, computerBoard);
 
     return playView;
   }
@@ -282,17 +272,6 @@ const domManager = (() => {
     const boards = view.querySelectorAll(".board");
 
     boards.forEach((board) => resetBoard(board));
-
-    if (view.classList.contains("setup-view")) resetShipPool();
-  }
-
-  function resetShipPool() {
-    const setupView = document.querySelector(".setup-view");
-
-    const shipPool = setupView.querySelector(".ship-pool");
-    const ships = shipPool.querySelectorAll("div");
-
-    ships.forEach((ship) => ship.classList.remove("missing"));
   }
 
   function displayWinner(winner) {
