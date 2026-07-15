@@ -7,7 +7,9 @@
     "start": "webpack serve",
     "build": "webpack",
     "test": "jest",
-    "watch": "jest --watch"
+    "watch": "jest --watch",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
     "@babel/preset-env": "^8.0.2",
     "css-loader": "^7.1.4",
     "file-loader": "^6.2.0",
+    "gh-pages": "^6.3.0",
     "html-webpack-plugin": "^5.6.7",
     "jest": "^30.4.2",
     "style-loader": "^4.0.0",

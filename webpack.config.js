@@ -7,6 +7,7 @@ module.exports = {
   output: {
     filename: "bundle.[contenthash].js",
     path: path.resolve(__dirname, "dist"),
+    publicPath: "/TOP_battleship/",
     clean: true,
   },
   module: {
