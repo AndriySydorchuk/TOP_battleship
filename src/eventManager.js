@@ -99,7 +99,10 @@ const eventManager = (() => {
         if (!playerCanAct) return;
 
         let hitted = playerTurn(cell, boards);
-        if (hitted) return;
+        if (hitted) {
+          playerCanAct = true;
+          return;
+        }
 
         computerTurn(boards);
       });
