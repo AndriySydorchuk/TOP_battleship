@@ -9,6 +9,8 @@ import {
 import { CONFIG } from "./config";
 
 const eventManager = (() => {
+  let playerCanAct = false;
+
   function init() {
     handleViewSwitch();
     handleComputerOption();
@@ -32,7 +34,10 @@ const eventManager = (() => {
     });
 
     returnBtns.forEach((returnBtn) => {
-      returnBtn.addEventListener("click", () => domManager.showView(startView));
+      returnBtn.addEventListener("click", () => {
+        playerCanAct = false;
+        domManager.showView(startView);
+      });
     });
 
     playBtn.addEventListener("click", () => {
@@ -70,6 +75,7 @@ const eventManager = (() => {
     const playBtn = document.querySelector(".play-btn");
 
     playBtn.addEventListener("click", () => {
+      playerCanAct = true;
       const currentPlayer = game.getCurrentPlayer();
       if (currentPlayer.board === null) return;
 
@@ -90,6 +96,7 @@ const eventManager = (() => {
     actionCells.forEach((cell) => {
       cell.addEventListener("click", () => {
         if (game.over()) return;
+        if (!playerCanAct) return;
 
         let hitted = playerTurn(cell, boards);
         if (hitted) return;
@@ -100,6 +107,7 @@ const eventManager = (() => {
   }
 
   function playerTurn(clickedCell, boards) {
+    playerCanAct = false;
     const [playerBoard, computerBoard] = boards;
     const currentPlayer = game.getCurrentPlayer();
 
@@ -156,6 +164,7 @@ const eventManager = (() => {
 
     await delay(1000);
     domManager.setActiveBoard(computerBoard);
+    playerCanAct = true;
   }
 
   return {
