@@ -190,7 +190,7 @@ export class Gameboard {
       });
     });
 
-    if (ships.length === 0) return;
+    if (ships.length === 0) return false;
 
     return ships.every((ship) => ship.isSunk());
   }
